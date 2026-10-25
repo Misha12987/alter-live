@@ -1200,12 +1200,103 @@ const ANSHLAG_FACES = {
       words: ['moon', 'light', 'sunny', 'coffee', 'dream', 'vibe', 'star', 'pixel', 'honey', 'storm', 'mango', 'frost', 'bear', 'fox', 'lucky', 'cherry', 'nova', 'wild', 'tiny', 'real']
     }
   };
+  /* more phrases, merged into the banks above so the chat repeats itself far less */
+  const MORE = {
+    ru: {
+      greet: ['всем приветики', 'хай всем', 'салют', 'доброй ночи', 'приветствую', 'о, я вовремя', 'залетела', 'залетел на огонёк', 'кто тут?', 'привет из Москвы', 'привет из Уфы', 'привет из Воронежа', 'привет из Тюмени', 'ку', 'куку', 'хеллоу', 'приветик ❤️', 'опа, эфир', 'наконец-то', 'уведомление пришло, бегу', 'только проснулась, а тут ты', 'привет с работы', 'привет из универа', 'я с пары', 'всем хорошего вечера', 'привет-привет-привет', 'здравствуйте', 'вот это я удачно зашёл', 'первый раз тут, привет', 'приветули', 'хаюшки', 'добрый день всем', 'я пришла', 'я пришёл', 'всем мир'],
+      praise: ['ты лучшая', 'ты лучший', 'какой вайб', 'обожаю', 'ты красотка', 'имба', 'сочно', 'топчик', 'кайф', 'смотрю и улыбаюсь', 'с тобой так спокойно', 'ты заряжаешь', 'голос приятный', 'улыбка 🔥', 'ты прям светишься', 'это лучшее за день', 'не могу оторваться', 'ты на стиле', 'причёска огонь', 'тебе идёт', 'ты такая милая', 'ты такой классный', 'мой краш', 'респект', 'уважаю', 'харизма зашкаливает', 'ты рил топ', 'всегда жду твои эфиры', 'подсела на твои стримы', 'ты делаешь мой вечер', 'обожаю твой смех', 'залипла', 'ты очень красиво говоришь', 'приятно смотреть', 'самый уютный эфир'],
+      react: ['пхпхпх', 'кек', 'ахахахах', 'жесть', 'капец', 'офигеть', 'вот это да', 'реально?', 'серьёзно?', 'не верю', 'рил', 'факт', 'плюсую', 'точняк', 'да ладно', 'ого', 'мощно', 'сильно сказано', 'в точку', 'я тоже так думаю', 'хаха да', 'мда', 'ну всё', 'вот-вот', 'жиза полная', 'ахах точно', 'не ожидал', 'ничего себе', 'красиво сказал', 'вот это поворот', 'бывает', 'аж мурашки', 'это гениально', 'я в шоке', 'ахаха жиза'],
+      ask: ['сколько тебе лет?', 'ты где живёшь?', 'что ела сегодня?', 'какой у тебя знак зодиака?', 'у тебя есть кот?', 'какая любимая песня?', 'ты учишься или работаешь?', 'кто твой краш?', 'какие планы на выходные?', 'какой фильм посоветуешь?', 'ты сова или жаворонок?', 'кофе или чай?', 'есть тикток?', 'как начала стримить?', 'это твоя комната?', 'что за свет у тебя?', 'на что снимаешь?', 'ответишь на мой вопрос?', 'будет розыгрыш?', 'во сколько завтра эфир?', 'что слушаешь сейчас?', 'любимая еда?', 'была за границей?', 'как настроение?', 'чем занимаешься по жизни?', 'покажешь кота?', 'спой что-нибудь?', 'расскажи историю', 'а что дальше будет?', 'сколько длится эфир?', 'какой сериал сейчас смотришь?', 'ты кофе любишь?', 'какое у тебя хобби?', 'когда следующий эфир?', 'ты читаешь комменты?'],
+      chat: ['кто тоже не спит?', 'всем хорошего настроения', 'чат, держимся', 'кто откуда?', 'всем сил', 'обожаю этот чат', 'чат сегодня огонь', 'лайкнула', 'подписалась', 'подписался', 'кидаю лайки', 'сохранила эфир', 'скинула подруге', 'позвала маму смотреть', 'я с телефона под одеялом', 'у кого тоже дождь?', 'у нас снег', 'кто из Казани, ставьте +', 'смотрю вместо пар', 'смотрю на перемене', 'я тут с самого начала', 'не уходи только', 'эфир бы подольше', 'опоздала, что было?', 'о чём сейчас речь?', 'я в наушниках, кайф', 'звук отличный сегодня', 'картинка чёткая', 'интернет у меня лагает', 'всем любви ❤️', 'чат, вы лучшие', 'кто тоже с работы?', 'народ, всем привет', 'кто впервые, ставьте +', 'ставлю будильник на следующий эфир'],
+      emoji: ['🥰', '🥺', '💕', '😭😭', '🤣🤣🤣', '👏👏', '🔥😍', '💖💖', '🫶', '🤍', '❤️‍🔥', '😎', '🙈', '🌸🌸', '⭐️⭐️⭐️', '🎉', '💯💯', '😂❤️', '🤩', '👀👀', '😍😍😍', '🫶🫶', '🙌🙌', '😅', '💫', '🌟', '😘', '🤗'],
+      hate: ['зевота', 'скукота', 'а можно что-то интереснее?', 'ничего не понятно', 'свет плохой', 'опять болтовня', 'фон скучный', 'сколько можно', 'не смешно', 'где контент?', 'выключаю через минуту', 'камера мыльная', 'зачем я это смотрю', 'тихо очень', 'накрутили зрителей', 'это всё боты', 'сделай что-нибудь', 'вчера было лучше', 'ну такое', 'пусто как-то'],
+      defend: ['не нравится — не смотри', 'хейтеры как всегда', 'игнорь их', 'ты топ, не слушай', 'модеры, бан', 'завидуют', 'мы с тобой', 'зато нам нравится', 'не кормите троллей', 'всё отлично', 'держись', 'ой всё, хейтеры проснулись'],
+      a_what: ['смотрю тебя и ем', 'лежу в ванной', 'еду в такси', 'на паре сижу', 'делаю маникюр', 'собираюсь на тусу', 'стою в пробке', 'гуляю в парке', 'пью кофе', 'жду автобус', 'не могу уснуть', 'укачиваю ребёнка', 'смотрю сериал фоном', 'играю в телефон', 'убираюсь', 'глажу кота', 'сижу в очереди к врачу', 'на тренировке между подходами', 'готовлю уроки', 'листаю ленту'],
+      a_where: ['Уфа', 'Челябинск', 'Воронеж', 'Иркутск', 'Тюмень', 'Калининград', 'Нижний', 'Омск', 'Волгоград', 'Красноярск', 'Ярославль', 'Хабаровск', 'Барнаул', 'Мурманск', 'из Германии', 'из Израиля', 'Ереван', 'Бишкек', 'Ташкент', 'Рига', 'Тула', 'Саратов', 'Сургут', 'Якутск'],
+      a_how: ['норм, а у тебя?', 'отлично, ты как?', 'устала после работы', 'хорошо 😊', 'потихоньку', 'на позитиве', 'грустненько, но ты поднимаешь', 'бодро', 'супер, спасибо', 'не жалуюсь', 'сонно', 'отлично, отпуск 😎'],
+      a_yes: ['да', 'однозначно', 'ни в коем случае 😂', 'конечно да', 'пробуй', 'я бы да', 'хз, сама решай', 'спроси чат', 'го-го-го', 'давай', 'лучше нет', 'почему бы и нет'],
+      a_def: ['ага', 'понимаю', 'а дальше?', 'точно-точно', 'хорошая мысль', 'согласен', 'хаха', 'это правда', 'вот да', 'мне нравится', 'продолжай', 'слушаю', 'годно', 'интересная тема', 'расскажи ещё'],
+      don_msg: ['на шаурму', 'на новую лампу', 'за улыбку', 'спасибо за эфир', 'передай привет коту', 'это от всего чата', 'на кофе с круассаном', 'на мечту', 'ты заслужила', 'продолжай в том же духе', 'для поднятия настроения', 'чтобы эфиры были чаще', 'на пиццу 🍕', 'за лучший эфир недели', 'просто потому что можешь'],
+      names: ['arina', 'veronika', 'milana', 'ksusha', 'eva', 'alisa', 'karina', 'diana', 'zhenya', 'kostya', 'andrey', 'sergey', 'oleg', 'pasha', 'ruslan', 'danya', 'lyosha', 'mark', 'tim', 'sofi', 'vasilisa', 'yulia'],
+      words: ['sunny', 'bunny', 'vanilla', 'kiwi', 'peach', 'sky', 'dream', 'berry', 'choco', 'mint', 'wolf', 'kitty', 'ice', 'neon', 'velvet', 'cloud', 'angel', 'bear', 'loki', 'rose']
+    },
+    en: {
+      greet: ['hiii', 'hello hello', 'evening all', 'just joined', 'hey from London', 'hey from LA', 'yo chat', 'sup', 'notification brought me here', 'first time here hi', 'good morning from Australia', 'hi from my bed', 'hey everyone ❤️', 'made it!', 'hello from work'],
+      praise: ['you look amazing', 'love the vibe', 'so wholesome', 'iconic', 'queen', 'king', 'you never miss', 'your laugh 😭', 'love your energy', 'this made my day', 'obsessed', 'you glow', 'so calming', 'favorite streamer', 'love your style'],
+      react: ['no wayyy', 'real', 'facts', 'so true', 'deadass', 'omg', 'wild', 'crazy', 'fr fr', 'bro', 'that is insane', 'i felt that', 'agreed', 'yesss', 'i cant'],
+      ask: ['how old are you?', 'where do you live?', 'cats or dogs?', 'coffee or tea?', 'favorite movie?', 'what are you eating?', 'do you have tiktok?', 'when did you start streaming?', 'is that your room?', 'what camera do you use?', 'any plans this weekend?', 'favorite song?', 'do you read the comments?', 'giveaway when?', 'can you say hi to me?'],
+      chat: ['who else is up?', 'chat is so nice today', 'liked!', 'followed', 'saved this live', 'sent it to my bestie', 'watching in class', 'watching at work shh', 'raining here', 'snowing here', 'anyone from Texas?', 'audio is great today', 'love this chat', 'stay longer pls', 'my wifi is lagging'],
+      emoji: ['🥰', '🥺', '💕', '😭😭', '🤣🤣', '👏👏', '🔥😍', '🫶', '🤍', '❤️‍🔥', '😎', '🙈', '🎉', '💯💯', '🤩', '👀👀'],
+      hate: ['so boring', 'nothing happening', 'bad lighting', 'blurry camera', 'zzz', 'fake viewers', 'all bots', 'do something', 'yesterday was better', 'mid'],
+      defend: ["if you don't like it leave", 'ignore the haters', 'mods ban them', 'we love you', "they're jealous", "you're doing great"],
+      a_def: ['ok', 'i see', 'and then?', 'true true', 'nice', 'go on', 'love that', 'interesting', 'tell us more', 'lol'],
+      don_msg: ['for pizza 🍕', 'thanks for the stream', 'for your cat', 'keep it up', 'from the whole chat', 'for a coffee', 'you earned it'],
+      names: ['ava', 'harper', 'luna', 'nora', 'aria', 'jack', 'owen', 'eli', 'caleb', 'isaac', 'logan', 'zara', 'ivy', 'leah', 'kai', 'finn'],
+      words: ['sunny', 'peach', 'cloud', 'dream', 'kiwi', 'neon', 'velvet', 'angel', 'berry', 'ice', 'rose', 'wolf']
+    }
+  };
+  for (const lg of Object.keys(MORE)) for (const k of Object.keys(MORE[lg])) if (T[lg][k]) T[lg][k] = [...new Set([...T[lg][k], ...MORE[lg][k]])];
+
+  /* phrase builder: assembles comments from parts, so thousands of variants appear */
+  const GEN = {
+    ru: {
+      hi: ['привет', 'приветик', 'хай', 'салют', 'всем привет', 'добрый вечер', 'ку', 'здарова', 'приветики'],
+      from: ['из {city}', 'с работы', 'из метро', 'с дивана', 'из универа', 'из кровати', 'из машины', 'с кухни', 'с дачи', 'из спортзала'],
+      city: ['Москвы', 'Питера', 'Казани', 'Самары', 'Сочи', 'Минска', 'Екб', 'Новосиба', 'Краснодара', 'Перми', 'Уфы', 'Ростова', 'Тулы', 'Омска', 'Риги', 'Алматы', 'Воронежа', 'Тюмени'],
+      you: ['ты', 'сегодня ты', 'ты как всегда', 'ты прям', 'ну ты'],
+      good: ['огонь', 'топ', 'красотка', 'лучший', 'лучшая', 'в ударе', 'на стиле', 'супер', 'милашка', 'легенда', 'космос', 'просто вау'],
+      things: [['фон', 'm'], ['свет', 'm'], ['голос', 'm'], ['смех', 'm'], ['вайб', 'm'], ['макияж', 'm'], ['эфир', 'm'], ['кофта', 'f'], ['причёска', 'f'], ['комната', 'f'], ['улыбка', 'f'], ['музыка', 'f'], ['атмосфера', 'f']],
+      adj: [['классный', 'классная'], ['милый', 'милая'], ['красивый', 'красивая'], ['уютный', 'уютная'], ['шикарный', 'шикарная'], ['приятный', 'приятная'], ['крутой', 'крутая']],
+      place: ['в метро', 'на работе', 'под одеялом', 'на паре', 'в маршрутке', 'в очереди', 'на кухне', 'в ванной', 'в обед', 'в такси', 'на балконе'],
+      mins: ['5 минут', '10 минут', 'полчаса', 'час', 'с самого начала'],
+      t: [
+        g => `${g.p(g.hi)} ${g.p(g.from).replace('{city}', g.p(g.city))}`,
+        g => `${g.p(g.you)} ${g.p(g.good)}`,
+        g => { const [w, gnd] = g.p(g.things), a = g.p(g.adj); return `${gnd === 'f' ? 'какая' : 'какой'} ${gnd === 'f' ? a[1] : a[0]} ${w}`; },
+        g => `${g.p(g.hi)}, {host}`,
+        g => `смотрю ${g.p(g.place)}`,
+        g => `кто из ${g.p(g.city)}? ставьте +`,
+        g => `лайк, если ты из ${g.p(g.city)}`,
+        g => `смотрю уже ${g.p(g.mins)}`,
+        g => `${g.p(g.hi)}! ${g.p(g.you)} ${g.p(g.good)}`,
+        g => { const [w, gnd] = g.p(g.things); return `${w} ${gnd === 'f' ? 'просто огонь' : 'просто огонь'}`; },
+        g => Array.from({ length: ri(2, 4) }, () => g.p(EMO)).join('')
+      ]
+    },
+    en: {
+      hi: ['hi', 'hey', 'hello', 'yo', 'heyyy', 'evening'],
+      from: ['from {city}', 'from work', 'from bed', 'from the bus', 'from class', 'from the gym', 'from my car'],
+      city: ['London', 'NYC', 'LA', 'Toronto', 'Sydney', 'Berlin', 'Texas', 'Miami', 'Dublin', 'Chicago', 'Manila', 'Madrid'],
+      you: ['you', 'you look', "you're", 'today you look'],
+      good: ['amazing', 'so pretty', 'iconic', 'fire', 'adorable', 'stunning', 'unreal', 'so good'],
+      things: [['setup', ''], ['lighting', ''], ['voice', ''], ['laugh', ''], ['vibe', ''], ['room', ''], ['outfit', ''], ['hair', ''], ['music', '']],
+      place: ['on the train', 'at work', 'under my blanket', 'in class', 'on my break', 'in line', 'in the bath', 'at lunch'],
+      mins: ['5 min', '10 min', 'half an hour', 'an hour', 'since the start'],
+      t: [
+        g => `${g.p(g.hi)} ${g.p(g.from).replace('{city}', g.p(g.city))}`,
+        g => `${g.p(g.you)} ${g.p(g.good)}`,
+        g => `love the ${g.p(g.things)[0]}`,
+        g => `${g.p(g.hi)} {host}`,
+        g => `watching ${g.p(g.place)}`,
+        g => `anyone from ${g.p(g.city)}?`,
+        g => `been watching ${g.p(g.mins)}`,
+        g => `your ${g.p(g.things)[0]} is ${g.p(g.good)}`,
+        g => Array.from({ length: ri(2, 4) }, () => g.p(EMO)).join('')
+      ]
+    }
+  };
+  function genLine() {
+    const g = GEN[S.lang] || GEN.ru;
+    g.p = pick;
+    return pick(g.t)(g);
+  }
+
   const L = () => T[S.lang] || T.ru;
   const EMO = ['😂', '🔥', '❤️', '😍', '✨', '👀', '🙌', '💯'];
   const EMO_AVA = ['🐱', '🐶', '🦊', '🌸', '🐻', '🍒', '🐼', '🐰', '🌻', '🦋', '🐸', '🍓'];
 
-  const FEM = new Set(['katya', 'nastya', 'lena', 'masha', 'polina', 'alina', 'dasha', 'vika', 'sonya', 'lera', 'yana', 'liza', 'kris', 'anya', 'olya', 'sveta', 'emma', 'olivia', 'mia', 'ava', 'chloe', 'zoe', 'lily', 'grace', 'ella', 'maya', 'sofia', 'nina', 'ruby', 'kayla']);
-  const MASC = new Set(['dima', 'vlad', 'artem', 'kirill', 'egor', 'misha', 'nikita', 'ilya', 'max', 'roma', 'denis', 'gleb', 'timur', 'stas', 'vanya', 'jake', 'liam', 'noah', 'ethan', 'mason', 'lucas', 'ryan', 'tyler', 'josh', 'dylan', 'leo', 'ben']);
+  const FEM = new Set(['arina', 'veronika', 'milana', 'ksusha', 'eva', 'alisa', 'karina', 'diana', 'sofi', 'vasilisa', 'yulia', 'harper', 'luna', 'nora', 'aria', 'zara', 'ivy', 'leah', 'katya', 'nastya', 'lena', 'masha', 'polina', 'alina', 'dasha', 'vika', 'sonya', 'lera', 'yana', 'liza', 'kris', 'anya', 'olya', 'sveta', 'emma', 'olivia', 'mia', 'ava', 'chloe', 'zoe', 'lily', 'grace', 'ella', 'maya', 'sofia', 'nina', 'ruby', 'kayla']);
+  const MASC = new Set(['kostya', 'andrey', 'sergey', 'oleg', 'pasha', 'ruslan', 'danya', 'lyosha', 'mark', 'tim', 'jack', 'owen', 'eli', 'caleb', 'isaac', 'logan', 'finn', 'dima', 'vlad', 'artem', 'kirill', 'egor', 'misha', 'nikita', 'ilya', 'max', 'roma', 'denis', 'gleb', 'timur', 'stas', 'vanya', 'jake', 'liam', 'noah', 'ethan', 'mason', 'lucas', 'ryan', 'tyler', 'josh', 'dylan', 'leo', 'ben']);
   const nickGender = new Map();
   const blocked = new Set();
   const listOf = (str, max) => String(str || '').split('\n').map(x => x.trim()).filter(Boolean).slice(0, max);
@@ -1216,7 +1307,7 @@ const ANSHLAG_FACES = {
     let x = pick(pool);
     for (let i = 0; i < 5 && recentPicks.includes(x); i++) x = pick(pool);
     recentPicks.push(x);
-    if (recentPicks.length > 40) recentPicks.shift();
+    if (recentPicks.length > 80) recentPicks.shift();
     return x;
   }
   function makeNick() {
@@ -1471,7 +1562,8 @@ const ANSHLAG_FACES = {
     }
     if (S.platform === 'tw' && pool !== t.hate && chance(.32)) pool = t.tw;
     if (S.platform === 'tt' && pool !== t.hate && chance(.25)) pool = t.tt;
-    const raw = pickFresh(pool).replace(/\{host\}/g, S.host);
+    const everyday = pool === t.greet || pool === t.praise || pool === t.chat || pool === t.emoji || pool === t.react || pool === t.hostNamed;
+    const raw = (everyday && chance(.38) ? genLine() : pickFresh(pool)).replace(/\{host\}/g, S.host);
     addLine(pool === t.hate ? 'msg hate' : 'msg', makeNick(), pool === t.tw || pool === t.hype ? raw : humanize(raw));
   }
 
