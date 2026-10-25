@@ -693,6 +693,12 @@ input[type=range]{width:100%;margin:4px 0;accent-color:var(--onair)}
         <p class="ai-status" id="aiStatus" role="status"></p>
       </div>
 
+      <div class="field" id="objField">
+        <div class="switch-row"><label for="setObjects">Зрители замечают предметы в кадре</label><input class="switch" id="setObjects" type="checkbox"></div>
+        <p class="hint">Работает прямо на телефоне и без ключа: покажи в камеру еду, кружку, телефон, книгу или кота, и чат начнёт спрашивать про них. При первом включении камеры загрузится модель распознавания, это около 10 МБ.</p>
+        <p class="ai-status" id="objStatus" role="status"></p>
+      </div>
+
       <div class="field" id="micField" hidden>
         <div class="switch-row"><label for="setListen">Слушать микрофон</label><input class="switch" id="setListen" type="checkbox"></div>
         <p class="hint">Зрители реагируют на то, что ты говоришь вслух. Работает в Chrome на Android и в Safari на iPhone.</p>
@@ -1058,7 +1064,7 @@ const ANSHLAG_FACES = {
 
   /* ---------- settings ---------- */
   const KEY = 'anshlag:v1';
-  const DEF = { host: 'ваш_ник', target: 42000, speed: 'live', mode: 'normal', lang: 'ru', donations: true, sound: true, ai: 'off', provider: 'anthropic', apiKey: '', model: '', listen: false, vision: true, goal: true, goalTitle: 'Новый микрофон', goalSum: 10000, avatar: '', platform: 'ig', title: 'Болтаем и отвечаем на вопросы', verified: true, tts: true, topic: 'chat', custom: '', customRate: 'mid', regulars: '', secretTaps: true, countdown: true };
+  const DEF = { host: 'ваш_ник', target: 42000, speed: 'live', mode: 'normal', lang: 'ru', donations: true, sound: true, ai: 'off', provider: 'anthropic', apiKey: '', model: '', listen: false, vision: true, goal: true, goalTitle: 'Новый микрофон', goalSum: 10000, avatar: '', platform: 'ig', title: 'Болтаем и отвечаем на вопросы', verified: true, tts: true, topic: 'chat', custom: '', customRate: 'mid', regulars: '', secretTaps: true, countdown: true, objects: true };
   const S = Object.assign({}, DEF);
   try { const raw = localStorage.getItem(KEY); if (raw) Object.assign(S, JSON.parse(raw)); } catch (e) {}
   const save = () => { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) {} };
@@ -1866,7 +1872,8 @@ const ANSHLAG_FACES = {
       setInterval(tickViewers, 700),
       setInterval(() => { timerEl.textContent = fmtAgo(elapsed()); }, 1000),
       setInterval(sceneWatch, 1500),
-      setInterval(quietWatch, 5000)
+      setInterval(quietWatch, 5000),
+      setInterval(detectTick, 2500)
     ];
     every('comment', botComment, () => Math.min(6000, Math.max(110, expMs(commentRate()))));
     every('heart', spawnHeart, () => Math.min(4000, Math.max(90, expMs(heartRate()))));
@@ -2117,6 +2124,7 @@ const ANSHLAG_FACES = {
       `- Platform: ${S.platform === 'tt' ? 'TikTok LIVE comments. Very short, lots of emoji, people ask for follow-backs and shout-outs, mention tapping likes and sending gifts.' : S.platform === 'tw' ? 'Twitch-style chat. Fast and short, many messages are just emote words such as KEKW, Pog, LUL, monkaS, OMEGALUL, PogChamp, Kappa, or "W", "+++"; mostly lowercase.' : S.platform === 'yt' ? 'YouTube live chat. Casual, sometimes slightly longer messages; people mention where they watch from.' : 'Instagram Live comments. Short and friendly, lots of emoji.'}`,
       goalLine,
       (() => { const m = loadMemory(); if (!m) return ''; const d = Math.max(0, Math.round((Date.now() - m.at) / 864e5)); return `- In the previous stream (${d === 0 ? 'earlier today' : d + ' day(s) ago'}) the streamer talked about: ${m.said.join(' / ')}. One or two returning viewers may mention it.`; })(),
+      detectedNow.length ? `- An on-device detector sees in the frame right now: ${detectedNow.join(', ')}. Viewers may ask about these things.` : '',
       screenOn ? '- The streamer is sharing their screen (game mode). React to what is on the screen, like a gameplay audience.' : '',
       imageBlock,
       '',
@@ -2831,6 +2839,9 @@ const ANSHLAG_FACES = {
     });
   });
 
+  const setObjects = $('#setObjects');
+  setObjects.checked = !!S.objects;
+  setObjects.addEventListener('change', () => { S.objects = setObjects.checked; save(); if (!S.objects) detectedNow = []; });
   const setCountdown = $('#setCountdown');
   setCountdown.checked = !!S.countdown;
   setCountdown.addEventListener('change', () => { S.countdown = setCountdown.checked; save(); });
@@ -2907,6 +2918,138 @@ const ANSHLAG_FACES = {
     goalDone = raised >= S.goalSum;
     renderGoal(false);
   });
+
+  /* on-device object recognition (browser/phone version): viewers notice food and things in the frame, no API key needed */
+  const OBJ = {
+    'pizza': ['пицца', 'пиццу', 'f', 'food', 'pizza'], 'donut': ['пончик', 'пончик', 'm', 'food', 'donut'], 'cake': ['торт', 'торт', 'm', 'food', 'cake'],
+    'sandwich': ['бутерброд', 'бутерброд', 'm', 'food', 'sandwich'], 'hot dog': ['хот-дог', 'хот-дог', 'm', 'food', 'hot dog'], 'banana': ['банан', 'банан', 'm', 'food', 'banana'],
+    'apple': ['яблоко', 'яблоко', 'n', 'food', 'apple'], 'orange': ['апельсин', 'апельсин', 'm', 'food', 'orange'], 'broccoli': ['брокколи', 'брокколи', 'n', 'food', 'broccoli'],
+    'carrot': ['морковка', 'морковку', 'f', 'food', 'carrot'], 'bowl': ['тарелка', 'тарелку', 'f', 'food', 'bowl'],
+    'cup': ['кружка', 'кружку', 'f', 'drink', 'mug'], 'wine glass': ['бокал', 'бокал', 'm', 'drink', 'glass'], 'bottle': ['бутылка', 'бутылку', 'f', 'drink', 'bottle'],
+    'cell phone': ['телефон', 'телефон', 'm', 'thing', 'phone'], 'laptop': ['ноутбук', 'ноутбук', 'm', 'thing', 'laptop'], 'keyboard': ['клавиатура', 'клавиатуру', 'f', 'thing', 'keyboard'],
+    'mouse': ['мышка', 'мышку', 'f', 'thing', 'mouse'], 'remote': ['пульт', 'пульт', 'm', 'thing', 'remote'], 'book': ['книга', 'книгу', 'f', 'thing', 'book'],
+    'clock': ['часы', 'часы', 'pl', 'thing', 'clock'], 'vase': ['ваза', 'вазу', 'f', 'thing', 'vase'], 'scissors': ['ножницы', 'ножницы', 'pl', 'thing', 'scissors'],
+    'teddy bear': ['мишка', 'мишку', 'm', 'thing', 'teddy bear'], 'hair drier': ['фен', 'фен', 'm', 'thing', 'hair dryer'], 'toothbrush': ['зубная щётка', 'зубную щётку', 'f', 'thing', 'toothbrush'],
+    'backpack': ['рюкзак', 'рюкзак', 'm', 'thing', 'backpack'], 'umbrella': ['зонт', 'зонт', 'm', 'thing', 'umbrella'], 'handbag': ['сумка', 'сумку', 'f', 'thing', 'bag'],
+    'tie': ['галстук', 'галстук', 'm', 'thing', 'tie'], 'suitcase': ['чемодан', 'чемодан', 'm', 'thing', 'suitcase'], 'sports ball': ['мяч', 'мяч', 'm', 'thing', 'ball'],
+    'skateboard': ['скейт', 'скейт', 'm', 'thing', 'skateboard'], 'tennis racket': ['ракетка', 'ракетку', 'f', 'thing', 'racket'], 'potted plant': ['цветок', 'цветок', 'm', 'thing', 'plant'],
+    'tv': ['телевизор', 'телевизор', 'm', 'thing', 'TV'], 'bicycle': ['велосипед', 'велосипед', 'm', 'thing', 'bike'], 'car': ['машина', 'машину', 'f', 'thing', 'car'],
+    'motorcycle': ['мотоцикл', 'мотоцикл', 'm', 'thing', 'motorbike'],
+    'cat': ['котик', 'котика', 'm', 'pet', 'cat'], 'dog': ['собака', 'собаку', 'f', 'pet', 'dog'], 'bird': ['птичка', 'птичку', 'f', 'pet', 'bird']
+  };
+  const OBJ_IN = {
+    'pizza': OBJ.pizza, 'cheeseburger': ['бургер', 'бургер', 'm', 'food', 'burger'], 'hotdog': OBJ['hot dog'], 'ice cream': ['мороженое', 'мороженое', 'n', 'food', 'ice cream'],
+    'espresso': ['кофе', 'кофе', 'm', 'drink', 'coffee'], 'coffee mug': OBJ.cup, 'cup': OBJ.cup, 'banana': OBJ.banana, 'orange': OBJ.orange, 'lemon': ['лимон', 'лимон', 'm', 'food', 'lemon'],
+    'strawberry': ['клубника', 'клубнику', 'f', 'food', 'strawberries'], 'pineapple': ['ананас', 'ананас', 'm', 'food', 'pineapple'], 'granny smith': OBJ.apple,
+    'pomegranate': ['гранат', 'гранат', 'm', 'food', 'pomegranate'], 'bagel': ['бублик', 'бублик', 'm', 'food', 'bagel'], 'pretzel': ['крендель', 'крендель', 'm', 'food', 'pretzel'],
+    'burrito': ['буррито', 'буррито', 'n', 'food', 'burrito'], 'guacamole': ['гуакамоле', 'гуакамоле', 'n', 'food', 'guacamole'], 'carbonara': ['паста', 'пасту', 'f', 'food', 'pasta'],
+    'french loaf': ['багет', 'багет', 'm', 'food', 'baguette'], 'trifle': ['десерт', 'десерт', 'm', 'food', 'dessert'], 'chocolate sauce': ['шоколад', 'шоколад', 'm', 'food', 'chocolate'],
+    'meat loaf': ['мясо', 'мясо', 'n', 'food', 'meat'], 'mashed potato': ['пюре', 'пюре', 'n', 'food', 'mashed potatoes'], 'potpie': ['пирог', 'пирог', 'm', 'food', 'pie'],
+    'consomme': ['суп', 'суп', 'm', 'food', 'soup'], 'hot pot': ['суп', 'суп', 'm', 'food', 'soup'], 'plate': OBJ.bowl, 'broccoli': OBJ.broccoli,
+    'cucumber': ['огурец', 'огурец', 'm', 'food', 'cucumber'], 'bell pepper': ['перец', 'перец', 'm', 'food', 'pepper'], 'mushroom': ['гриб', 'гриб', 'm', 'food', 'mushroom'],
+    'corn': ['кукуруза', 'кукурузу', 'f', 'food', 'corn'], 'red wine': ['вино', 'вино', 'n', 'drink', 'wine'], 'wine bottle': ['вино', 'вино', 'n', 'drink', 'wine'],
+    'beer glass': ['пиво', 'пиво', 'n', 'drink', 'beer'], 'beer bottle': ['пиво', 'пиво', 'n', 'drink', 'beer'], 'water bottle': ['вода', 'воду', 'f', 'drink', 'water'],
+    'pop bottle': ['газировка', 'газировку', 'f', 'drink', 'soda'], 'eggnog': ['коктейль', 'коктейль', 'm', 'drink', 'cocktail'],
+    'cellular telephone': OBJ['cell phone'], 'ipod': ['плеер', 'плеер', 'm', 'thing', 'player'], 'notebook': OBJ.laptop, 'laptop': OBJ.laptop, 'computer keyboard': OBJ.keyboard,
+    'mouse': OBJ.mouse, 'remote control': OBJ.remote, 'sunglasses': ['очки', 'очки', 'pl', 'thing', 'sunglasses'], 'sunglass': ['очки', 'очки', 'pl', 'thing', 'sunglasses'],
+    'lipstick': ['помада', 'помаду', 'f', 'thing', 'lipstick'], 'perfume': ['духи', 'духи', 'pl', 'thing', 'perfume'], 'lotion': ['крем', 'крем', 'm', 'thing', 'cream'],
+    'hair spray': ['лак для волос', 'лак для волос', 'm', 'thing', 'hairspray'], 'wallet': ['кошелёк', 'кошелёк', 'm', 'thing', 'wallet'], 'purse': ['сумочка', 'сумочку', 'f', 'thing', 'purse'],
+    'backpack': OBJ.backpack, 'running shoe': ['кроссовки', 'кроссовки', 'pl', 'thing', 'sneakers'], 'sandal': ['сандали', 'сандали', 'pl', 'thing', 'sandals'],
+    'digital watch': ['часы', 'часы', 'pl', 'thing', 'watch'], 'analog clock': OBJ.clock, 'wall clock': OBJ.clock, 'teddy': OBJ['teddy bear'],
+    'acoustic guitar': ['гитара', 'гитару', 'f', 'thing', 'guitar'], 'electric guitar': ['гитара', 'гитару', 'f', 'thing', 'guitar'], 'joystick': ['джойстик', 'джойстик', 'm', 'thing', 'controller'],
+    'book jacket': OBJ.book, 'comic book': ['комикс', 'комикс', 'm', 'thing', 'comic'], 'candle': ['свеча', 'свечу', 'f', 'thing', 'candle'], 'tennis ball': OBJ['sports ball'],
+    'soccer ball': OBJ['sports ball'], 'basketball': OBJ['sports ball'], 'dumbbell': ['гантеля', 'гантелю', 'f', 'thing', 'dumbbell'], 'sweatshirt': ['худи', 'худи', 'n', 'thing', 'hoodie'],
+    'jersey': ['футболка', 'футболку', 'f', 'thing', 'shirt'], 'cardigan': ['кардиган', 'кардиган', 'm', 'thing', 'cardigan'], 'necklace': ['ожерелье', 'ожерелье', 'n', 'thing', 'necklace'],
+    'umbrella': OBJ.umbrella, 'pillow': ['подушка', 'подушку', 'f', 'thing', 'pillow'], 'television': OBJ.tv, 'monitor': ['монитор', 'монитор', 'm', 'thing', 'monitor'],
+    'desktop computer': ['компьютер', 'компьютер', 'm', 'thing', 'computer'], 'vase': OBJ.vase, 'tabby': OBJ.cat, 'tiger cat': OBJ.cat, 'persian cat': OBJ.cat, 'egyptian cat': OBJ.cat,
+    'siamese cat': OBJ.cat, 'golden retriever': OBJ.dog, 'labrador retriever': OBJ.dog, 'pug': OBJ.dog, 'chihuahua': OBJ.dog, 'pomeranian': OBJ.dog, 'siberian husky': OBJ.dog,
+    'samoyed': OBJ.dog, 'french bulldog': OBJ.dog, 'pembroke': OBJ.dog, 'beagle': OBJ.dog, 'german shepherd': OBJ.dog, 'hamster': ['хомяк', 'хомяка', 'm', 'pet', 'hamster'],
+    'goldfish': ['рыбка', 'рыбку', 'f', 'pet', 'fish']
+  };
+  const agree = (g, m, f, n, pl) => ({ m, f, n, pl })[g] || m;
+  const OBJ_TPL = {
+    ru: {
+      food: [o => `о, ${o.n}!`, o => `это ${o.n}? выглядит вкусно`, o => `${o.n} 😍`, () => 'дай кусочек', o => `где брал ${o.a}?`, () => 'сколько стоит?', () => 'сам готовил?', o => `я тоже хочу ${o.a}`,
+        () => 'приятного аппетита!', o => `ммм, ${o.n}`, () => 'вкусно?', () => 'а мне?', () => 'теперь я голодная', () => 'покажи поближе', o => `${agree(o.g, 'какой', 'какая', 'какое', 'какие')} ${agree(o.g, 'аппетитный', 'аппетитная', 'аппетитное', 'аппетитные')}`,
+        () => 'это на ужин?', () => 'рецепт пж', o => `обожаю ${o.a}`, () => 'откуда еда?', () => 'это доставка?'],
+      drink: [() => 'что пьёшь?', o => `о, ${o.n}`, () => 'за твоё здоровье 🥂', () => 'чай или кофе?', () => 'я тоже пью чай сейчас', () => 'приятного!', o => `${agree(o.g, 'красивый', 'красивая', 'красивое', 'красивые')} ${o.n}`, () => 'что там налито?', () => 'налей и мне'],
+      thing: [o => `что за ${o.n}?`, o => `покажи ${o.a} поближе`, o => `${agree(o.g, 'классный', 'классная', 'классное', 'классные')} ${o.n}`, o => `где брал ${o.a}?`, o => `сколько ${agree(o.g, 'стоил', 'стоила', 'стоило', 'стоили')}?`,
+        o => `о, ${o.n}!`, o => `это ${agree(o.g, 'новый', 'новая', 'новое', 'новые')} ${o.n}?`, o => `хочу ${agree(o.g, 'такой', 'такую', 'такое', 'такие')} же`, () => 'а какой фирмы?', () => 'дай ссылку', o => `${o.n} топ`, () => 'покажи ещё раз'],
+      pet: [o => `ААА ${o.n} 😍`, () => 'как зовут?', () => 'покажи ещё', o => `${agree(o.g, 'какой', 'какая', 'какое', 'какие')} ${agree(o.g, 'милый', 'милая', 'милое', 'милые')}!`, () => 'сколько лет?', () => 'погладь от меня', () => 'ми-ми-ми',
+        o => `это ${agree(o.g, 'твой', 'твоя', 'твоё', 'твои')}?`, () => '😍😍😍', () => 'дай посмотреть поближе']
+    },
+    en: {
+      food: [o => `ooh ${o.n}!`, o => `is that ${o.n}? looks so good`, o => `${o.n} 😍`, () => 'can i have some', () => 'where did you get it?', () => 'how much was it?', () => 'did you make it?', () => 'enjoy your meal!', () => 'is it good?', () => "i'm hungry now", () => 'show closer', () => 'recipe pls'],
+      drink: [() => 'what are you drinking?', o => `oh ${o.n}`, () => 'cheers 🥂', () => 'tea or coffee?', () => "i'm drinking tea too", o => `nice ${o.n}`],
+      thing: [o => `what's that ${o.n}?`, o => `show the ${o.n} closer`, o => `cool ${o.n}`, () => 'where did you get it?', () => 'how much was it?', o => `oh a ${o.n}!`, o => `is that a new ${o.n}?`, () => 'i want one', () => 'what brand?', () => 'link pls'],
+      pet: [o => `OMG A ${o.n.toUpperCase()} 😍`, () => "what's their name?", () => 'show more', () => 'so cute!', () => 'how old?', () => 'pet them for me', () => '😍😍😍']
+    }
+  };
+  const det = { state: 'idle', coco: null, mnet: null, busy: false };
+  let detectedNow = [], objStable = new Map(), lastObjReact = 0;
+  const objSeen = new Map();
+  const loadScript = src => new Promise((res, rej) => {
+    const el = document.createElement('script');
+    el.src = src; el.async = true; el.crossOrigin = 'anonymous';
+    el.onload = res; el.onerror = () => rej(new Error('script ' + src));
+    document.head.appendChild(el);
+  });
+  const objStatus = t => { const el = $('#objStatus'); el.textContent = t || ''; };
+  async function initDetector() {
+    if (det.state !== 'idle' || inViewer) return;
+    det.state = 'loading';
+    objStatus('Загружаю распознавание предметов…');
+    try {
+      await loadScript('https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.22.0/dist/tf.min.js');
+      await loadScript('https://cdn.jsdelivr.net/npm/@tensorflow-models/coco-ssd@2.2.3/dist/coco-ssd.min.js');
+      det.coco = await window.cocoSsd.load({ base: 'lite_mobilenet_v2' });
+      det.state = 'ready';
+      objStatus('Распознавание предметов включено · ' + hhmm());
+      toast('Зрители теперь видят предметы в кадре', 2200);
+      loadScript('https://cdn.jsdelivr.net/npm/@tensorflow-models/mobilenet@2.1.1/dist/mobilenet.min.js')
+        .then(() => window.mobilenet.load({ version: 1, alpha: 0.5 }))
+        .then(m => { det.mnet = m; objStatus('Распознавание предметов включено, расширенный режим · ' + hhmm()); })
+        .catch(() => {});
+    } catch (e) {
+      det.state = 'failed';
+      objStatus('Не получилось загрузить распознавание предметов. Проверь интернет и перезагрузи страницу.');
+    }
+  }
+  function reactToObject(e) {
+    const en = S.lang === 'en', o = en ? { n: e[4], a: e[4], g: 'm' } : { n: e[0], a: e[1], g: e[2] };
+    const tpl = (en ? OBJ_TPL.en : OBJ_TPL.ru)[e[3]];
+    let at = rnd(500, 1100);
+    [...tpl].sort(() => Math.random() - .5).slice(0, ri(3, 6)).forEach(f => {
+      at += rnd(350, 1000);
+      setTimeout(() => { if (live) addLine('msg', makeNick(), humanize(f(o))); }, at);
+    });
+  }
+  async function detectTick() {
+    if (!live || !S.objects || inViewer || camOff) return;
+    const src = frameSource();
+    if (!src) { detectedNow = []; return; }
+    if (det.state === 'idle') { initDetector(); return; }
+    if (det.state !== 'ready' || det.busy || document.hidden) return;
+    det.busy = true;
+    try {
+      const found = new Map();
+      (await det.coco.detect(src[0], 10, .55)).forEach(d => { const e = OBJ[d.class]; if (e) found.set(e[0], e); });
+      if (det.mnet) (await det.mnet.classify(src[0], 3)).forEach(c => {
+        if (c.probability < .35) return;
+        const e = OBJ_IN[String(c.className).split(',')[0].trim().toLowerCase()];
+        if (e) found.set(e[0], e);
+      });
+      detectedNow = [...found.keys()];
+      if (S.ai === 'key' && canSee()) return;
+      const nowT = Date.now(), next = new Map();
+      for (const [name, e] of found) {
+        const cnt = (objStable.get(name) || 0) + 1;
+        next.set(name, cnt);
+        if (cnt >= 2 && nowT - (objSeen.get(name) || 0) > 180000 && nowT - lastObjReact > 12000) { objSeen.set(name, nowT); lastObjReact = nowT; reactToObject(e); }
+      }
+      objStable = next;
+    } catch (e) {} finally { det.busy = false; }
+  }
 
   /* background music, played on this device only */
   const music = new Audio();
@@ -3020,6 +3163,7 @@ const ANSHLAG_FACES = {
   $('#aiHere').hidden = $('#aiHereLabel').hidden = true;
   $('#micField').hidden = !SR || inViewer;
   $('#bgScreen').hidden = $('#bgScreenLabel').hidden = $('#screenHint').hidden = !canShareScreen();
+  $('#objField').hidden = inViewer;
   applyHost();
   applyPlaceholder();
   applyPlatform(false);
