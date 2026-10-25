@@ -694,8 +694,8 @@ input[type=range]{width:100%;margin:4px 0;accent-color:var(--onair)}
       </div>
 
       <div class="field" id="objField">
-        <div class="switch-row"><label for="setObjects">Зрители замечают предметы в кадре</label><input class="switch" id="setObjects" type="checkbox"></div>
-        <p class="hint">Работает прямо на телефоне и без ключа: покажи в камеру еду, кружку, телефон, книгу или кота, и чат начнёт спрашивать про них. При первом включении камеры загрузится модель распознавания, это около 10 МБ.</p>
+        <div class="switch-row"><label for="setObjects">Зрители видят, что в кадре</label><input class="switch" id="setObjects" type="checkbox"></div>
+        <p class="hint">Работает прямо на телефоне и без ключа. Чат замечает еду, вещи, одежду, технику, инструменты, животных и места (около 400 видов), людей рядом с тобой, твой уход из кадра, а ещё свет, цвета, закат, зелень, тряску и смену места. При первом включении камеры загрузится модель распознавания, это около 10 МБ.</p>
         <p class="ai-status" id="objStatus" role="status"></p>
       </div>
 
@@ -1243,58 +1243,123 @@ const ANSHLAG_FACES = {
   };
   for (const lg of Object.keys(MORE)) for (const k of Object.keys(MORE[lg])) if (T[lg][k]) T[lg][k] = [...new Set([...T[lg][k], ...MORE[lg][k]])];
 
-  /* phrase builder: assembles comments from parts, so thousands of variants appear */
+  /* phrase builder: assembles comments from parts — hundreds of thousands of combinations */
   const GEN = {
     ru: {
-      hi: ['привет', 'приветик', 'хай', 'салют', 'всем привет', 'добрый вечер', 'ку', 'здарова', 'приветики'],
-      from: ['из {city}', 'с работы', 'из метро', 'с дивана', 'из универа', 'из кровати', 'из машины', 'с кухни', 'с дачи', 'из спортзала'],
-      city: ['Москвы', 'Питера', 'Казани', 'Самары', 'Сочи', 'Минска', 'Екб', 'Новосиба', 'Краснодара', 'Перми', 'Уфы', 'Ростова', 'Тулы', 'Омска', 'Риги', 'Алматы', 'Воронежа', 'Тюмени'],
-      you: ['ты', 'сегодня ты', 'ты как всегда', 'ты прям', 'ну ты'],
-      good: ['огонь', 'топ', 'красотка', 'лучший', 'лучшая', 'в ударе', 'на стиле', 'супер', 'милашка', 'легенда', 'космос', 'просто вау'],
-      things: [['фон', 'm'], ['свет', 'm'], ['голос', 'm'], ['смех', 'm'], ['вайб', 'm'], ['макияж', 'm'], ['эфир', 'm'], ['кофта', 'f'], ['причёска', 'f'], ['комната', 'f'], ['улыбка', 'f'], ['музыка', 'f'], ['атмосфера', 'f']],
-      adj: [['классный', 'классная'], ['милый', 'милая'], ['красивый', 'красивая'], ['уютный', 'уютная'], ['шикарный', 'шикарная'], ['приятный', 'приятная'], ['крутой', 'крутая']],
-      place: ['в метро', 'на работе', 'под одеялом', 'на паре', 'в маршрутке', 'в очереди', 'на кухне', 'в ванной', 'в обед', 'в такси', 'на балконе'],
-      mins: ['5 минут', '10 минут', 'полчаса', 'час', 'с самого начала'],
-      t: [
-        g => `${g.p(g.hi)} ${g.p(g.from).replace('{city}', g.p(g.city))}`,
-        g => `${g.p(g.you)} ${g.p(g.good)}`,
-        g => { const [w, gnd] = g.p(g.things), a = g.p(g.adj); return `${gnd === 'f' ? 'какая' : 'какой'} ${gnd === 'f' ? a[1] : a[0]} ${w}`; },
-        g => `${g.p(g.hi)}, {host}`,
-        g => `смотрю ${g.p(g.place)}`,
-        g => `кто из ${g.p(g.city)}? ставьте +`,
-        g => `лайк, если ты из ${g.p(g.city)}`,
-        g => `смотрю уже ${g.p(g.mins)}`,
-        g => `${g.p(g.hi)}! ${g.p(g.you)} ${g.p(g.good)}`,
-        g => { const [w, gnd] = g.p(g.things); return `${w} ${gnd === 'f' ? 'просто огонь' : 'просто огонь'}`; },
-        g => Array.from({ length: ri(2, 4) }, () => g.p(EMO)).join('')
-      ]
+      hi: ['привет', 'приветик', 'хай', 'салют', 'всем привет', 'ку', 'здарова', 'приветики', 'хаюшки', 'йоу', 'хеллоу', 'приветствую', 'привет-привет', 'приветули', 'всем хай', 'доброго времени'],
+      from: ['из {city}', 'с работы', 'из метро', 'с дивана', 'из универа', 'из кровати', 'из машины', 'с кухни', 'с дачи', 'из спортзала', 'с пар', 'из ванной', 'с балкона', 'из кафе', 'из поезда', 'с другого конца страны'],
+      city: ['Москвы', 'Питера', 'Казани', 'Самары', 'Сочи', 'Минска', 'Екб', 'Новосиба', 'Краснодара', 'Перми', 'Уфы', 'Ростова', 'Тулы', 'Омска', 'Риги', 'Алматы', 'Воронежа', 'Тюмени', 'Челябинска', 'Нижнего',
+        'Волгограда', 'Красноярска', 'Иркутска', 'Хабаровска', 'Владивостока', 'Калининграда', 'Ярославля', 'Твери', 'Рязани', 'Липецка', 'Курска', 'Белгорода', 'Саратова', 'Пензы', 'Ульяновска', 'Ижевска',
+        'Кирова', 'Архангельска', 'Мурманска', 'Сургута', 'Якутска', 'Томска', 'Барнаула', 'Кемерово', 'Оренбурга', 'Астрахани', 'Ставрополя', 'Анапы', 'Бишкека', 'Ташкента', 'Еревана', 'Тбилиси', 'Баку',
+        'Астаны', 'Варшавы', 'Берлина', 'Праги', 'Дубая', 'Стамбула', 'Таиланда'],
+      you: ['ты', 'сегодня ты', 'ты как всегда', 'ты прям', 'ну ты', 'ты реально', 'ты просто', 'ты сегодня особенно'],
+      good: ['огонь', 'топ', 'красотка', 'лучший', 'лучшая', 'в ударе', 'на стиле', 'супер', 'милашка', 'легенда', 'космос', 'просто вау', 'бомба', 'икона', 'звезда', 'чудо', 'солнце', 'умничка',
+        'класс', 'шик', 'королева', 'король', 'зайка', 'котик', 'сияешь', 'заряжаешь', 'на высоте', 'лучше всех', 'в форме', 'на позитиве'],
+      things: [['фон', 'm'], ['свет', 'm'], ['голос', 'm'], ['смех', 'm'], ['вайб', 'm'], ['макияж', 'm'], ['эфир', 'm'], ['маникюр', 'm'], ['образ', 'm'], ['ракурс', 'm'], ['интерьер', 'm'], ['стиль', 'm'],
+        ['кофта', 'f'], ['причёска', 'f'], ['комната', 'f'], ['улыбка', 'f'], ['музыка', 'f'], ['атмосфера', 'f'], ['подсветка', 'f'], ['футболка', 'f'], ['энергия', 'f'], ['картинка', 'f'], ['лампа', 'f'],
+        ['настроение', 'n'], ['освещение', 'n'], ['качество', 'n'], ['платье', 'n'], ['волосы', 'pl'], ['серьги', 'pl'], ['обои', 'pl']],
+      adj: [['классный', 'классная', 'классное', 'классные'], ['милый', 'милая', 'милое', 'милые'], ['красивый', 'красивая', 'красивое', 'красивые'], ['уютный', 'уютная', 'уютное', 'уютные'],
+        ['шикарный', 'шикарная', 'шикарное', 'шикарные'], ['приятный', 'приятная', 'приятное', 'приятные'], ['крутой', 'крутая', 'крутое', 'крутые'], ['стильный', 'стильная', 'стильное', 'стильные'],
+        ['нежный', 'нежная', 'нежное', 'нежные'], ['яркий', 'яркая', 'яркое', 'яркие'], ['тёплый', 'тёплая', 'тёплое', 'тёплые'], ['идеальный', 'идеальная', 'идеальное', 'идеальные'],
+        ['волшебный', 'волшебная', 'волшебное', 'волшебные'], ['необычный', 'необычная', 'необычное', 'необычные'], ['чёткий', 'чёткая', 'чёткое', 'чёткие'], ['атмосферный', 'атмосферная', 'атмосферное', 'атмосферные'],
+        ['бомбический', 'бомбическая', 'бомбическое', 'бомбические'], ['мощный', 'мощная', 'мощное', 'мощные'], ['сочный', 'сочная', 'сочное', 'сочные'], ['топовый', 'топовая', 'топовое', 'топовые']],
+      place: ['в метро', 'на работе', 'под одеялом', 'на паре', 'в маршрутке', 'в очереди', 'на кухне', 'в ванной', 'в обед', 'в такси', 'на балконе', 'в автобусе', 'на перемене', 'в кафе', 'в машине',
+        'на диване', 'в парке', 'в поезде', 'в самолёте', 'на даче', 'в зале', 'в библиотеке', 'на совещании 🤫', 'в кровати', 'на улице'],
+      mins: ['5 минут', '10 минут', '15 минут', 'полчаса', 'час', 'два часа', 'с самого начала', 'с первой секунды', 'весь вечер', 'уже долго', 'с обеда', 'не отрываясь'],
+      act: ['ем пиццу', 'пью чай', 'пью кофе', 'делаю домашку', 'готовлю ужин', 'лежу в ванной', 'крашусь', 'глажу кота', 'гуляю с собакой', 'еду домой', 'собираюсь на работу', 'рисую', 'вяжу',
+        'листаю ленту', 'жду маму', 'сижу на скучной паре', 'убираюсь', 'качаюсь', 'играю в телефон', 'ем мороженое', 'валяюсь', 'мою посуду', 'стою в пробке', 'жду доставку'],
+      feel: ['улыбаюсь', 'кайфую', 'отдыхаю душой', 'смеюсь', 'расслабляюсь', 'заряжаюсь', 'балдею', 'радуюсь', 'влюбляюсь в этот эфир', 'отдыхаю', 'забываю про всё', 'не могу оторваться', 'тащусь',
+        'млею', 'умиляюсь', 'в восторге'],
+      q: ['какой у тебя телефон', 'что за лампа у тебя', 'где ты сейчас', 'во сколько закончишь', 'что на ужин', 'какая у тебя погода', 'что слушаешь', 'сколько у тебя времени', 'какие планы на вечер',
+        'откуда такой фон', 'что за кофта', 'какой у тебя знак зодиака', 'ты сова или жаворонок', 'кофе или чай', 'кто твой любимый блогер', 'когда следующий эфир', 'что посмотреть вечером',
+        'какую музыку любишь', 'был когда-нибудь на море', 'какое у тебя хобби']
     },
     en: {
-      hi: ['hi', 'hey', 'hello', 'yo', 'heyyy', 'evening'],
-      from: ['from {city}', 'from work', 'from bed', 'from the bus', 'from class', 'from the gym', 'from my car'],
-      city: ['London', 'NYC', 'LA', 'Toronto', 'Sydney', 'Berlin', 'Texas', 'Miami', 'Dublin', 'Chicago', 'Manila', 'Madrid'],
-      you: ['you', 'you look', "you're", 'today you look'],
-      good: ['amazing', 'so pretty', 'iconic', 'fire', 'adorable', 'stunning', 'unreal', 'so good'],
-      things: [['setup', ''], ['lighting', ''], ['voice', ''], ['laugh', ''], ['vibe', ''], ['room', ''], ['outfit', ''], ['hair', ''], ['music', '']],
-      place: ['on the train', 'at work', 'under my blanket', 'in class', 'on my break', 'in line', 'in the bath', 'at lunch'],
-      mins: ['5 min', '10 min', 'half an hour', 'an hour', 'since the start'],
-      t: [
-        g => `${g.p(g.hi)} ${g.p(g.from).replace('{city}', g.p(g.city))}`,
-        g => `${g.p(g.you)} ${g.p(g.good)}`,
-        g => `love the ${g.p(g.things)[0]}`,
-        g => `${g.p(g.hi)} {host}`,
-        g => `watching ${g.p(g.place)}`,
-        g => `anyone from ${g.p(g.city)}?`,
-        g => `been watching ${g.p(g.mins)}`,
-        g => `your ${g.p(g.things)[0]} is ${g.p(g.good)}`,
-        g => Array.from({ length: ri(2, 4) }, () => g.p(EMO)).join('')
-      ]
+      hi: ['hi', 'hey', 'hello', 'yo', 'heyyy', 'evening', 'sup', 'hiya', 'howdy', 'hey hey', 'hello hello', 'greetings'],
+      from: ['from {city}', 'from work', 'from bed', 'from the bus', 'from class', 'from the gym', 'from my car', 'from the kitchen', 'from the office', 'from the beach', 'from my couch', 'from the train'],
+      city: ['London', 'NYC', 'LA', 'Toronto', 'Sydney', 'Berlin', 'Texas', 'Miami', 'Dublin', 'Chicago', 'Manila', 'Madrid', 'Paris', 'Ohio', 'Atlanta', 'Seattle', 'Vancouver', 'Melbourne', 'Lagos',
+        'Mumbai', 'Dubai', 'Lisbon', 'Rome', 'Amsterdam', 'Boston', 'Denver', 'Phoenix', 'Houston', 'Auckland', 'Cape Town'],
+      you: ['you', 'you look', "you're", 'today you look', 'honestly you look'],
+      good: ['amazing', 'so pretty', 'iconic', 'fire', 'adorable', 'stunning', 'unreal', 'so good', 'glowing', 'gorgeous', 'legendary', 'perfect', 'awesome', 'elite', 'so chill', 'radiant', 'cute', 'magical', 'goated', 'wonderful'],
+      things: ['setup', 'lighting', 'voice', 'laugh', 'vibe', 'room', 'outfit', 'hair', 'music', 'energy', 'background', 'makeup', 'nails', 'earrings', 'smile', 'decor', 'camera angle', 'hoodie', 'lamp', 'wallpaper'],
+      adj: ['cool', 'cute', 'pretty', 'cozy', 'fancy', 'nice', 'sick', 'stylish', 'soft', 'bright', 'warm', 'perfect', 'magical', 'unique', 'crisp'],
+      place: ['on the train', 'at work', 'under my blanket', 'in class', 'on my break', 'in line', 'in the bath', 'at lunch', 'in a taxi', 'on the balcony', 'in the car', 'at the gym', 'in bed', 'outside', 'at the cafe'],
+      mins: ['5 min', '10 min', 'half an hour', 'an hour', 'since the start', 'all evening', 'nonstop', 'two hours'],
+      act: ['eating pizza', 'drinking tea', 'having coffee', 'doing homework', 'cooking dinner', 'in the bath', 'doing my makeup', 'petting my cat', 'walking my dog', 'heading home', 'drawing', 'scrolling', 'cleaning', 'stuck in traffic', 'waiting for delivery'],
+      feel: ['smiling', 'vibing', 'relaxing', 'laughing', 'feeling great', 'chilling', 'so happy', 'in heaven', 'obsessed', 'cheering up'],
+      q: ['what phone do you have', 'where are you now', 'when does the stream end', "what's for dinner", "how's the weather", 'what are you listening to', 'any plans tonight', 'where is that hoodie from', 'cats or dogs', 'coffee or tea', 'when is the next stream', 'favorite movie']
     }
   };
+  const timeGreet = en => { const h = new Date().getHours(); return en ? (h < 5 ? 'good night' : h < 12 ? 'good morning' : h < 18 ? 'good afternoon' : 'good evening') : (h < 5 ? 'доброй ночи' : h < 12 ? 'доброе утро' : h < 17 ? 'добрый день' : h < 23 ? 'добрый вечер' : 'доброй ночи'); };
+  const GEN_T = {
+    ru: [
+      g => `${g.p(g.hi)} ${g.from()}`,
+      g => `${g.p(g.you)} ${g.p(g.good)}`,
+      g => { const [w, x] = g.p(g.things), a = g.p(g.adj); return `${g.f(x, 'какой', 'какая', 'какое', 'какие')} ${g.f(x, ...a)} ${w}`; },
+      g => `${g.p(g.hi)}, {host}`,
+      g => `смотрю ${g.p(g.place)}`,
+      g => `кто из ${g.p(g.city)}? ставьте +`,
+      g => `лайк, если ты из ${g.p(g.city)}`,
+      g => `смотрю уже ${g.p(g.mins)}`,
+      g => `${g.p(g.hi)}! ${g.p(g.you)} ${g.p(g.good)}`,
+      g => `${timeGreet()} всем`,
+      g => `${timeGreet()}, {host}`,
+      g => Array.from({ length: ri(2, 4) }, () => g.p(EMO)).join(''),
+      g => `я ${g.p(g.act)} и смотрю тебя`,
+      g => `${g.p(g.act)} под твой эфир`,
+      g => `сижу ${g.p(g.place)} и ${g.p(g.feel)}`,
+      g => `{host}, ты ${g.p(g.good)}`,
+      g => `из ${g.p(g.city)} на связи`,
+      g => `привет из ${g.p(g.city)}! ${g.p(g.you)} ${g.p(g.good)}`,
+      g => `${g.p(g.good)}, как всегда`,
+      g => { const [w, x] = g.p(g.things); return `мне нравится ${g.f(x, 'твой', 'твоя', 'твоё', 'твои')} ${w}`; },
+      g => { const [w, x] = g.p(g.things), a = g.p(g.adj); return `откуда ${g.f(x, 'такой', 'такая', 'такое', 'такие')} ${g.f(x, ...a)} ${w}?`; },
+      g => `ставлю ${g.p([10, 50, 100, 200, 500, 1000])} лайков`,
+      g => `${g.p(g.feel)} от твоего эфира`,
+      g => `сегодня ${g.p(g.adj)[0]} вайб`,
+      g => `кто тоже смотрит ${g.p(g.place)}?`,
+      g => { const [w, x] = g.p(g.things), a = g.p(g.adj); return `${g.f(x, 'какой', 'какая', 'какое', 'какие')} ${g.f(x, ...a)} ${w} 😍`; },
+      g => { const [w, x] = g.p(g.things), a = g.p(g.adj); return `${w} — ${g.f(x, ...a)} 🔥`; },
+      g => `${g.p(g.you)} ${g.p(g.good)}, {host}`,
+      g => `${g.p(g.hi)}! ${g.p(g.act)}, а тут ты`,
+      g => { const [w, x] = g.p(g.things), a = g.p(g.adj); return `не могу, ${g.f(x, 'какой', 'какая', 'какое', 'какие')} ${g.f(x, ...a)} ${w}`; },
+      g => `${g.p(g.hi)} всем ${g.from()}`,
+      g => `${g.p(g.mins)} смотрю и ${g.p(g.feel)}`,
+      g => `а ${g.p(g.q)}?`,
+      g => `{host}, а ${g.p(g.q)}?`,
+      g => { const [w, x] = g.p(g.things), a = g.p(g.adj); return `${g.p(g.hi)} ${g.from()}! ${g.f(x, 'какой', 'какая', 'какое', 'какие')} ${g.f(x, ...a)} ${w}`; }
+    ],
+    en: [
+      g => `${g.p(g.hi)} ${g.from()}`,
+      g => `${g.p(g.you)} ${g.p(g.good)}`,
+      g => `love the ${g.p(g.things)}`,
+      g => `${g.p(g.hi)} {host}`,
+      g => `watching ${g.p(g.place)}`,
+      g => `anyone from ${g.p(g.city)}?`,
+      g => `been watching ${g.p(g.mins)}`,
+      g => `your ${g.p(g.things)} is ${g.p(g.good)}`,
+      g => `${timeGreet(true)} everyone`,
+      g => `${timeGreet(true)} {host}`,
+      g => Array.from({ length: ri(2, 4) }, () => g.p(EMO)).join(''),
+      g => `${g.p(g.act)} and watching you`,
+      g => `${g.p(g.act)} with your stream on`,
+      g => `${g.p(g.place)} and ${g.p(g.feel)}`,
+      g => `such a ${g.p(g.adj)} ${g.p(g.things)}`,
+      g => `{host} you're ${g.p(g.good)}`,
+      g => `${g.p(g.city)} checking in`,
+      g => `hello from ${g.p(g.city)}! ${g.p(g.you)} ${g.p(g.good)}`,
+      g => `${g.p(g.mins)} in and still ${g.p(g.feel)}`,
+      g => `${g.p(g.q)}?`,
+      g => `{host} ${g.p(g.q)}?`,
+      g => `${g.p(g.hi)} ${g.from()}! love the ${g.p(g.adj)} ${g.p(g.things)}`
+    ]
+  };
   function genLine() {
-    const g = GEN[S.lang] || GEN.ru;
+    const en = S.lang === 'en', g = Object.assign({}, en ? GEN.en : GEN.ru);
     g.p = pick;
-    return pick(g.t)(g);
+    g.f = (x, m, f, n, pl) => ({ m, f, n, pl })[x] || m;
+    g.from = () => g.p(g.from_ || (g.from_ = (en ? GEN.en : GEN.ru).from)).replace('{city}', g.p(g.city));
+    return pick(en ? GEN_T.en : GEN_T.ru)(g);
   }
 
   const L = () => T[S.lang] || T.ru;
@@ -2125,6 +2190,7 @@ const ANSHLAG_FACES = {
       goalLine,
       (() => { const m = loadMemory(); if (!m) return ''; const d = Math.max(0, Math.round((Date.now() - m.at) / 864e5)); return `- In the previous stream (${d === 0 ? 'earlier today' : d + ' day(s) ago'}) the streamer talked about: ${m.said.join(' / ')}. One or two returning viewers may mention it.`; })(),
       detectedNow.length ? `- An on-device detector sees in the frame right now: ${detectedNow.join(', ')}. Viewers may ask about these things.` : '',
+      sceneNow.length || peopleNow > 1 ? `- The frame looks: ${[...sceneNow, peopleNow > 1 ? peopleNow + ' people visible' : ''].filter(Boolean).join(', ')}.` : '',
       screenOn ? '- The streamer is sharing their screen (game mode). React to what is on the screen, like a gameplay audience.' : '',
       imageBlock,
       '',
@@ -2937,52 +3003,194 @@ const ANSHLAG_FACES = {
     'motorcycle': ['мотоцикл', 'мотоцикл', 'm', 'thing', 'motorbike'],
     'cat': ['котик', 'котика', 'm', 'pet', 'cat'], 'dog': ['собака', 'собаку', 'f', 'pet', 'dog'], 'bird': ['птичка', 'птичку', 'f', 'pet', 'bird']
   };
-  const OBJ_IN = {
-    'pizza': OBJ.pizza, 'cheeseburger': ['бургер', 'бургер', 'm', 'food', 'burger'], 'hotdog': OBJ['hot dog'], 'ice cream': ['мороженое', 'мороженое', 'n', 'food', 'ice cream'],
-    'espresso': ['кофе', 'кофе', 'm', 'drink', 'coffee'], 'coffee mug': OBJ.cup, 'cup': OBJ.cup, 'banana': OBJ.banana, 'orange': OBJ.orange, 'lemon': ['лимон', 'лимон', 'm', 'food', 'lemon'],
-    'strawberry': ['клубника', 'клубнику', 'f', 'food', 'strawberries'], 'pineapple': ['ананас', 'ананас', 'm', 'food', 'pineapple'], 'granny smith': OBJ.apple,
-    'pomegranate': ['гранат', 'гранат', 'm', 'food', 'pomegranate'], 'bagel': ['бублик', 'бублик', 'm', 'food', 'bagel'], 'pretzel': ['крендель', 'крендель', 'm', 'food', 'pretzel'],
-    'burrito': ['буррито', 'буррито', 'n', 'food', 'burrito'], 'guacamole': ['гуакамоле', 'гуакамоле', 'n', 'food', 'guacamole'], 'carbonara': ['паста', 'пасту', 'f', 'food', 'pasta'],
-    'french loaf': ['багет', 'багет', 'm', 'food', 'baguette'], 'trifle': ['десерт', 'десерт', 'm', 'food', 'dessert'], 'chocolate sauce': ['шоколад', 'шоколад', 'm', 'food', 'chocolate'],
-    'meat loaf': ['мясо', 'мясо', 'n', 'food', 'meat'], 'mashed potato': ['пюре', 'пюре', 'n', 'food', 'mashed potatoes'], 'potpie': ['пирог', 'пирог', 'm', 'food', 'pie'],
-    'consomme': ['суп', 'суп', 'm', 'food', 'soup'], 'hot pot': ['суп', 'суп', 'm', 'food', 'soup'], 'plate': OBJ.bowl, 'broccoli': OBJ.broccoli,
-    'cucumber': ['огурец', 'огурец', 'm', 'food', 'cucumber'], 'bell pepper': ['перец', 'перец', 'm', 'food', 'pepper'], 'mushroom': ['гриб', 'гриб', 'm', 'food', 'mushroom'],
-    'corn': ['кукуруза', 'кукурузу', 'f', 'food', 'corn'], 'red wine': ['вино', 'вино', 'n', 'drink', 'wine'], 'wine bottle': ['вино', 'вино', 'n', 'drink', 'wine'],
-    'beer glass': ['пиво', 'пиво', 'n', 'drink', 'beer'], 'beer bottle': ['пиво', 'пиво', 'n', 'drink', 'beer'], 'water bottle': ['вода', 'воду', 'f', 'drink', 'water'],
-    'pop bottle': ['газировка', 'газировку', 'f', 'drink', 'soda'], 'eggnog': ['коктейль', 'коктейль', 'm', 'drink', 'cocktail'],
-    'cellular telephone': OBJ['cell phone'], 'ipod': ['плеер', 'плеер', 'm', 'thing', 'player'], 'notebook': OBJ.laptop, 'laptop': OBJ.laptop, 'computer keyboard': OBJ.keyboard,
-    'mouse': OBJ.mouse, 'remote control': OBJ.remote, 'sunglasses': ['очки', 'очки', 'pl', 'thing', 'sunglasses'], 'sunglass': ['очки', 'очки', 'pl', 'thing', 'sunglasses'],
-    'lipstick': ['помада', 'помаду', 'f', 'thing', 'lipstick'], 'perfume': ['духи', 'духи', 'pl', 'thing', 'perfume'], 'lotion': ['крем', 'крем', 'm', 'thing', 'cream'],
-    'hair spray': ['лак для волос', 'лак для волос', 'm', 'thing', 'hairspray'], 'wallet': ['кошелёк', 'кошелёк', 'm', 'thing', 'wallet'], 'purse': ['сумочка', 'сумочку', 'f', 'thing', 'purse'],
-    'backpack': OBJ.backpack, 'running shoe': ['кроссовки', 'кроссовки', 'pl', 'thing', 'sneakers'], 'sandal': ['сандали', 'сандали', 'pl', 'thing', 'sandals'],
-    'digital watch': ['часы', 'часы', 'pl', 'thing', 'watch'], 'analog clock': OBJ.clock, 'wall clock': OBJ.clock, 'teddy': OBJ['teddy bear'],
-    'acoustic guitar': ['гитара', 'гитару', 'f', 'thing', 'guitar'], 'electric guitar': ['гитара', 'гитару', 'f', 'thing', 'guitar'], 'joystick': ['джойстик', 'джойстик', 'm', 'thing', 'controller'],
-    'book jacket': OBJ.book, 'comic book': ['комикс', 'комикс', 'm', 'thing', 'comic'], 'candle': ['свеча', 'свечу', 'f', 'thing', 'candle'], 'tennis ball': OBJ['sports ball'],
-    'soccer ball': OBJ['sports ball'], 'basketball': OBJ['sports ball'], 'dumbbell': ['гантеля', 'гантелю', 'f', 'thing', 'dumbbell'], 'sweatshirt': ['худи', 'худи', 'n', 'thing', 'hoodie'],
-    'jersey': ['футболка', 'футболку', 'f', 'thing', 'shirt'], 'cardigan': ['кардиган', 'кардиган', 'm', 'thing', 'cardigan'], 'necklace': ['ожерелье', 'ожерелье', 'n', 'thing', 'necklace'],
-    'umbrella': OBJ.umbrella, 'pillow': ['подушка', 'подушку', 'f', 'thing', 'pillow'], 'television': OBJ.tv, 'monitor': ['монитор', 'монитор', 'm', 'thing', 'monitor'],
-    'desktop computer': ['компьютер', 'компьютер', 'm', 'thing', 'computer'], 'vase': OBJ.vase, 'tabby': OBJ.cat, 'tiger cat': OBJ.cat, 'persian cat': OBJ.cat, 'egyptian cat': OBJ.cat,
-    'siamese cat': OBJ.cat, 'golden retriever': OBJ.dog, 'labrador retriever': OBJ.dog, 'pug': OBJ.dog, 'chihuahua': OBJ.dog, 'pomeranian': OBJ.dog, 'siberian husky': OBJ.dog,
-    'samoyed': OBJ.dog, 'french bulldog': OBJ.dog, 'pembroke': OBJ.dog, 'beagle': OBJ.dog, 'german shepherd': OBJ.dog, 'hamster': ['хомяк', 'хомяка', 'm', 'pet', 'hamster'],
-    'goldfish': ['рыбка', 'рыбку', 'f', 'pet', 'fish']
-  };
+  const OBJ_IN = {};
+  [
+    // food and drinks
+    'pizza:пицца:f:food:pizza', 'cheeseburger:бургер:m:food:burger', 'hotdog:хот-дог:m:food:hot dog', 'ice cream:мороженое:n:food:ice cream', 'ice lolly:эскимо:n:food:popsicle',
+    'banana:банан:m:food:banana', 'orange:апельсин:m:food:orange', 'lemon:лимон:m:food:lemon', 'strawberry:клубника:f:food:strawberries', 'pineapple:ананас:m:food:pineapple',
+    'granny smith:яблоко:n:food:apple', 'pomegranate:гранат:m:food:pomegranate', 'fig:инжир:m:food:figs', 'jackfruit:фрукт:m:food:fruit', 'custard apple:фрукт:m:food:fruit',
+    'bagel:бублик:m:food:bagel', 'pretzel:крендель:m:food:pretzel', 'burrito:буррито:n:food:burrito', 'guacamole:гуакамоле:n:food:guacamole', 'carbonara:паста:f:food:pasta',
+    'french loaf:багет:m:food:baguette', 'trifle:десерт:m:food:dessert', 'chocolate sauce:шоколад:m:food:chocolate', 'meat loaf:мясо:n:food:meat', 'mashed potato:пюре:n:food:mashed potatoes',
+    'potpie:пирог:m:food:pie', 'consomme:суп:m:food:soup', 'hot pot:суп:m:food:soup', 'plate:тарелка:f:food:plate', 'broccoli:брокколи:n:food:broccoli', 'cauliflower:капуста:f:food:cauliflower',
+    'head cabbage:капуста:f:food:cabbage', 'cucumber:огурец:m:food:cucumber', 'zucchini:кабачок:m:food:zucchini', 'butternut squash:тыква:f:food:pumpkin', 'acorn squash:тыква:f:food:pumpkin',
+    'artichoke:артишок:m:food:artichoke', 'bell pepper:перец:m:food:pepper', 'mushroom:гриб:m:food:mushroom', 'corn:кукуруза:f:food:corn', 'ear:кукуруза:f:food:corn', 'dough:тесто:n:food:dough',
+    'soup bowl:тарелка супа/тарелку супа:f:food:soup', 'espresso:кофе:m:drink:coffee', 'cup:кружка:f:drink:mug', 'coffee mug:кружка:f:drink:mug', 'red wine:вино:n:drink:wine',
+    'wine bottle:вино:n:drink:wine', 'beer glass:пиво:n:drink:beer', 'beer bottle:пиво:n:drink:beer', 'water bottle:вода:f:drink:water', 'pop bottle:газировка:f:drink:soda',
+    'eggnog:коктейль:m:drink:cocktail', 'cocktail shaker:шейкер:m:drink:shaker', 'teapot:чайник:m:drink:teapot', 'coffeepot:кофейник:m:drink:coffee pot', 'goblet:бокал:m:drink:glass',
+    'whiskey jug:кувшин:m:drink:jug', 'water jug:кувшин:m:drink:jug',
+    // cooking
+    'frying pan:сковородка:f:cook:pan', 'wok:вок:m:cook:wok', 'caldron:кастрюля:f:cook:pot', 'mixing bowl:миска:f:cook:bowl', 'measuring cup:мерный стакан:m:cook:measuring cup',
+    'toaster:тостер:m:cook:toaster', 'waffle iron:вафельница:f:cook:waffle maker', 'microwave:микроволновка:f:cook:microwave', 'espresso maker:кофеварка:f:cook:coffee maker',
+    // tech
+    'cellular telephone:телефон:m:tech:phone', 'dial telephone:телефон:m:tech:phone', 'ipod:плеер:m:tech:player', 'notebook:ноутбук:m:tech:laptop', 'laptop:ноутбук:m:tech:laptop',
+    'desktop computer:компьютер:m:tech:computer', 'computer keyboard:клавиатура:f:tech:keyboard', 'typewriter keyboard:клавиатура:f:tech:keyboard', 'mouse:мышка:f:tech:mouse',
+    'remote control:пульт:m:tech:remote', 'monitor:монитор:m:tech:monitor', 'screen:экран:m:tech:screen', 'television:телевизор:m:tech:TV', 'home theater:кинотеатр:m:tech:home theater',
+    'loudspeaker:колонка:f:tech:speaker', 'microphone:микрофон:m:tech:mic', 'joystick:джойстик:m:tech:controller', 'hand-held computer:планшет:m:tech:tablet', 'printer:принтер:m:tech:printer',
+    'projector:проектор:m:tech:projector', 'reflex camera:фотоаппарат:m:tech:camera', 'polaroid camera:полароид:m:tech:polaroid', 'tripod:штатив:m:tech:tripod', 'radio:радио:n:tech:radio',
+    'cassette player:магнитофон:m:tech:cassette player', 'cd player:плеер:m:tech:CD player', 'electric fan:вентилятор:m:tech:fan', 'space heater:обогреватель:m:tech:heater',
+    'iron:утюг:m:tech:iron', 'vacuum:пылесос:m:tech:vacuum',
+    // clothes, accessories, beauty
+    'sunglasses:очки:pl:wear:sunglasses', 'sunglass:очки:pl:wear:sunglasses', 'sweatshirt:худи:n:wear:hoodie', 'jersey:футболка:f:wear:shirt', 'fur coat:шуба:f:wear:fur coat',
+    'trench coat:плащ:m:wear:coat', 'suit:костюм:m:wear:suit', 'kimono:кимоно:n:wear:kimono', 'poncho:пончо:n:wear:poncho', 'pajama:пижама:f:wear:pajamas', 'jean:джинсы:pl:wear:jeans',
+    'apron:фартук:m:wear:apron', 'bow tie:бабочка:f:wear:bow tie', 'windsor tie:галстук:m:wear:tie', 'stole:палантин:m:wear:scarf', 'feather boa:боа:n:wear:boa', 'cowboy hat:шляпа:f:wear:hat',
+    'sombrero:сомбреро:n:wear:sombrero', 'bonnet:шапочка:f:wear:hat', 'mortarboard:шапка выпускника/шапку выпускника:f:wear:graduation cap', 'ski mask:балаклава:f:wear:ski mask',
+    'mask:маска:f:wear:mask', 'wig:парик:m:wear:wig', 'hair slide:заколка:f:wear:hair clip', 'necklace:ожерелье:n:wear:necklace', 'chain:цепочка:f:wear:chain', 'running shoe:кроссовки:pl:wear:sneakers',
+    'sandal:сандали:pl:wear:sandals', 'loafer:лоферы:pl:wear:loafers', 'clog:сабо:pl:wear:clogs', 'cowboy boot:сапоги:pl:wear:boots', 'sock:носки:pl:wear:socks', 'mitten:варежки:pl:wear:mittens',
+    'digital watch:часы:pl:wear:watch', 'backpack:рюкзак:m:wear:backpack', 'purse:сумочка:f:wear:purse', 'wallet:кошелёк:m:wear:wallet', 'mailbag:сумка:f:wear:bag', 'lipstick:помада:f:wear:lipstick',
+    'perfume:духи:pl:wear:perfume', 'lotion:крем:m:wear:cream', 'face powder:пудра:f:wear:powder', 'sunscreen:крем от солнца:m:wear:sunscreen', 'hair spray:лак для волос:m:wear:hairspray',
+    'hand blower:фен:m:wear:hair dryer',
+    // music
+    'acoustic guitar:гитара:f:music:guitar', 'electric guitar:электрогитара:f:music:electric guitar', 'banjo:банджо:n:music:banjo', 'violin:скрипка:f:music:violin', 'cello:виолончель:f:music:cello',
+    'grand piano:рояль:m:music:piano', 'upright:пианино:n:music:piano', 'drum:барабан:m:music:drum', 'maraca:маракасы:pl:music:maracas', 'harmonica:губная гармошка/губную гармошку:f:music:harmonica',
+    'accordion:аккордеон:m:music:accordion', 'sax:саксофон:m:music:sax', 'trombone:тромбон:m:music:trombone', 'cornet:труба:f:music:trumpet', 'flute:флейта:f:music:flute', 'harp:арфа:f:music:harp',
+    'ocarina:окарина:f:music:ocarina', 'panpipe:флейта:f:music:pan flute', 'gong:гонг:m:music:gong', 'marimba:маримба:f:music:marimba', 'drumstick:барабанные палочки:pl:music:drumsticks',
+    // sport
+    'tennis ball:теннисный мяч:m:sport:tennis ball', 'soccer ball:мяч:m:sport:ball', 'basketball:баскетбольный мяч:m:sport:basketball', 'volleyball:волейбольный мяч:m:sport:volleyball',
+    'rugby ball:мяч для регби:m:sport:rugby ball', 'golf ball:мячик для гольфа:m:sport:golf ball', 'ping-pong ball:шарик для пинг-понга:m:sport:ping pong ball', 'baseball:бейсбольный мяч:m:sport:baseball',
+    'dumbbell:гантеля:f:sport:dumbbell', 'barbell:штанга:f:sport:barbell', 'racket:ракетка:f:sport:racket', 'ski:лыжи:pl:sport:skis', 'puck:шайба:f:sport:puck', 'paddle:весло:n:sport:paddle',
+    'punching bag:груша:f:sport:punching bag', 'balance beam:бревно:n:sport:balance beam', 'horizontal bar:турник:m:sport:pull-up bar', 'parallel bars:брусья:pl:sport:bars',
+    'crash helmet:шлем:m:sport:helmet', 'football helmet:шлем:m:sport:helmet', 'bathing cap:шапочка для плавания/шапочку для плавания:f:sport:swim cap',
+    // things and toys
+    'teddy:мишка/мишку:m:thing:teddy bear', 'jigsaw puzzle:пазл:m:thing:puzzle', 'yo-yo:йо-йо:n:thing:yo-yo', 'pinwheel:вертушка:f:thing:pinwheel', 'balloon:шарик:m:thing:balloon',
+    'piggy bank:копилка:f:thing:piggy bank', 'candle:свеча:f:thing:candle', 'lighter:зажигалка:f:thing:lighter', 'lampshade:лампа:f:thing:lamp', 'table lamp:лампа:f:thing:lamp',
+    'spotlight:прожектор:m:thing:spotlight', 'torch:фонарик:m:thing:flashlight', 'book jacket:книга:f:thing:book', 'comic book:комикс:m:thing:comic', 'binder:папка:f:thing:binder',
+    'envelope:конверт:m:thing:envelope', 'crossword puzzle:кроссворд:m:thing:crossword', 'pencil box:пенал:m:thing:pencil case', 'ballpoint:ручка:f:thing:pen',
+    'fountain pen:перьевая ручка:f:thing:fountain pen', 'rubber eraser:ластик:m:thing:eraser', 'ruler:линейка:f:thing:ruler', 'safety pin:булавка:f:thing:safety pin',
+    'screwdriver:отвёртка:f:thing:screwdriver', 'hammer:молоток:m:thing:hammer', 'power drill:дрель:f:thing:drill', 'vase:ваза:f:thing:vase', 'pot:цветок в горшке:m:thing:plant',
+    'daisy:ромашки:pl:thing:daisies', 'shopping basket:корзинка:f:thing:basket', 'shopping cart:тележка:f:thing:shopping cart', 'plastic bag:пакет:m:thing:bag', 'carton:коробка:f:thing:box',
+    'crate:ящик:m:thing:crate', 'packet:пачка:f:thing:pack', 'chest:сундук:m:thing:chest', 'safe:сейф:m:thing:safe', 'binoculars:бинокль:m:thing:binoculars', 'magnetic compass:компас:m:thing:compass',
+    'hourglass:песочные часы:pl:thing:hourglass', 'band aid:пластырь:m:thing:band-aid', 'paper towel:бумажные полотенца:pl:thing:paper towels', 'umbrella:зонт:m:thing:umbrella',
+    'bath towel:полотенце:n:thing:towel', 'pillow:подушка:f:thing:pillow', 'quilt:одеяло:n:thing:blanket', 'padlock:замок:m:thing:padlock', 'analog clock:часы:pl:thing:clock',
+    'wall clock:часы:pl:thing:clock', 'digital clock:часы:pl:thing:clock', 'stopwatch:секундомер:m:thing:stopwatch', 'christmas stocking:носок:m:thing:stocking',
+    // vehicles
+    'sports car:спорткар:m:vehicle:sports car', 'convertible:кабриолет:m:vehicle:convertible', 'jeep:джип:m:vehicle:jeep', 'limousine:лимузин:m:vehicle:limo', 'cab:такси:n:vehicle:taxi',
+    'minivan:минивэн:m:vehicle:minivan', 'beach wagon:универсал:m:vehicle:car', 'pickup:пикап:m:vehicle:pickup', 'racer:гоночная машина:f:vehicle:race car', 'model t:ретро-машина:f:vehicle:vintage car',
+    'fire engine:пожарная машина:f:vehicle:fire truck', 'school bus:автобус:m:vehicle:bus', 'trolleybus:троллейбус:m:vehicle:trolleybus', 'minibus:маршрутка:f:vehicle:minibus',
+    'streetcar:трамвай:m:vehicle:tram', 'passenger car:поезд:m:vehicle:train', 'electric locomotive:поезд:m:vehicle:train', 'airliner:самолёт:m:vehicle:plane', 'mountain bike:велосипед:m:vehicle:bike',
+    'motor scooter:скутер:m:vehicle:scooter', 'moped:мопед:m:vehicle:moped', 'go-kart:карт:m:vehicle:go-kart', 'snowmobile:снегоход:m:vehicle:snowmobile', 'tractor:трактор:m:vehicle:tractor',
+    'speedboat:катер:m:vehicle:speedboat', 'canoe:каноэ:n:vehicle:canoe', 'gondola:гондола:f:vehicle:gondola', 'catamaran:катамаран:m:vehicle:catamaran', 'liner:лайнер:m:vehicle:cruise ship',
+    'car wheel:колесо:n:vehicle:wheel', 'grille:машина:f:vehicle:car',
+    // places: where the streamer seems to be
+    'car mirror:машина:f:place:car:в машине', 'seat belt:машина:f:place:car:в машине', 'odometer:машина:f:place:car:в машине', 'seashore:пляж:m:place:beach:на пляже',
+    'lakeside:озеро:n:place:lake:на озере', 'valley:долина:f:place:valley:в долине', 'alp:горы:pl:place:mountains:в горах', 'volcano:вулкан:m:place:volcano:у вулкана', 'cliff:скалы:pl:place:cliffs:на скалах',
+    'promontory:скалы:pl:place:cliffs:на скалах', 'sandbar:пляж:m:place:beach:на пляже', 'coral reef:море:n:place:sea:на море', 'geyser:гейзер:m:place:geyser:у гейзера',
+    'restaurant:ресторан:m:place:restaurant:в ресторане', 'library:библиотека:f:place:library:в библиотеке', 'bookshop:книжный:m:place:bookstore:в книжном', 'cinema:кинотеатр:m:place:cinema:в кино',
+    'barbershop:барбершоп:m:place:barbershop:в барбершопе', 'bakery:пекарня:f:place:bakery:в пекарне', 'grocery store:магазин:m:place:store:в магазине', 'butcher shop:магазин:m:place:shop:в магазине',
+    'shoe shop:обувной:m:place:shoe store:в обувном', 'toyshop:магазин игрушек:m:place:toy store:в магазине игрушек', 'confectionery:кондитерская:f:place:candy shop:в кондитерской',
+    'patio:терраса:f:place:patio:на террасе', 'boathouse:причал:m:place:pier:на причале', 'pier:пирс:m:place:pier:на пирсе', 'dock:порт:m:place:port:в порту', 'church:церковь:f:place:church:у церкви',
+    'mosque:мечеть:f:place:mosque:у мечети', 'palace:дворец:m:place:palace:у дворца', 'castle:замок:m:place:castle:у замка', 'monastery:монастырь:m:place:monastery:у монастыря',
+    'fountain:фонтан:m:place:fountain:у фонтана', 'steel arch bridge:мост:m:place:bridge:на мосту', 'suspension bridge:мост:m:place:bridge:на мосту', 'viaduct:мост:m:place:bridge:на мосту',
+    'triumphal arch:арка:f:place:arch:у арки', 'planetarium:планетарий:m:place:planetarium:в планетарии', 'greenhouse:теплица:f:place:greenhouse:в теплице', 'barn:ферма:f:place:farm:на ферме',
+    'carousel:карусель:f:place:carousel:в парке аттракционов', 'swing:качели:pl:place:swing:на качелях', 'stage:сцена:f:place:stage:на сцене', 'theater curtain:театр:m:place:theater:в театре',
+    'traffic light:светофор:m:place:street:на улице', 'street sign:улица:f:place:street:на улице', 'parking meter:парковка:f:place:parking:на парковке', 'beacon:маяк:m:place:lighthouse:у маяка',
+    'water tower:башня:f:place:tower:у башни', 'dome:купол:m:place:dome:у собора', 'tile roof:крыша:f:place:roof:на крыше', 'refrigerator:холодильник:m:place:fridge:на кухне',
+    'stove:плита:f:place:stove:на кухне', 'dishwasher:посудомойка:f:place:dishwasher:на кухне', 'washer:стиралка:f:place:washer:в ванной', 'bathtub:ванна:f:place:bathtub:в ванной',
+    'tub:ванна:f:place:tub:в ванной', 'shower curtain:ванная:f:place:bathroom:в ванной', 'washbasin:раковина:f:place:sink:в ванной', 'four-poster:кровать:f:place:bed:в спальне',
+    'studio couch:диван:m:place:couch:на диване', 'desk:стол:m:place:desk:за столом', 'dining table:стол:m:place:table:за столом', 'bookcase:книжный шкаф:m:place:bookcase:дома',
+    'wardrobe:шкаф:m:place:wardrobe:дома', 'china cabinet:сервант:m:place:cabinet:дома', 'entertainment center:гостиная:f:place:living room:в гостиной', 'window shade:окно:n:place:window:у окна',
+    'window screen:окно:n:place:window:у окна', 'radiator:батарея:f:place:radiator:дома', 'rocking chair:кресло-качалка:n:place:rocking chair:в кресле-качалке',
+    'barber chair:парикмахерская:f:place:salon:в парикмахерской', 'crib:кроватка:f:place:crib:в детской', 'cradle:колыбель:f:place:cradle:в детской', 'mosquito net:спальня:f:place:bedroom:в спальне',
+    'mountain tent:палатка:f:place:tent:в походе', 'yurt:юрта:f:place:yurt:в юрте', 'mobile home:дом на колёсах:m:place:camper:в доме на колёсах', 'scoreboard:стадион:m:place:stadium:на стадионе',
+    'maze:лабиринт:m:place:maze:в лабиринте',
+    // pets and animals
+    'tabby:котик/котика:m:pet:cat', 'tiger cat:котик/котика:m:pet:cat', 'persian cat:котик/котика:m:pet:cat', 'egyptian cat:котик/котика:m:pet:cat', 'siamese cat:котик/котика:m:pet:cat',
+    ...['golden retriever', 'labrador retriever', 'pug', 'chihuahua', 'pomeranian', 'siberian husky', 'samoyed', 'french bulldog', 'pembroke', 'beagle', 'german shepherd', 'rottweiler',
+      'doberman', 'boxer', 'bull mastiff', 'great dane', 'saint bernard', 'malamute', 'dalmatian', 'shih-tzu', 'maltese dog', 'yorkshire terrier', 'toy poodle', 'miniature poodle',
+      'standard poodle', 'border collie', 'collie', 'shetland sheepdog', 'cocker spaniel', 'english springer', 'chow', 'keeshond', 'pekinese', 'papillon', 'basset', 'bloodhound',
+      'whippet', 'italian greyhound', 'boston bull', 'miniature schnauzer', 'west highland white terrier', 'scotch terrier', 'airedale', 'eskimo dog', 'toy terrier'].map(d => d + ':собака:f:pet:dog'),
+    'hamster:хомяк/хомяка:m:pet:hamster', 'guinea pig:морская свинка:f:pet:guinea pig', 'hare:зайчик/зайчика:m:pet:bunny', 'wood rabbit:кролик/кролика:m:pet:bunny', 'angora:кролик/кролика:m:pet:bunny',
+    'goldfish:рыбка:f:pet:fish', 'macaw:попугай/попугая:m:pet:parrot', 'african grey:попугай/попугая:m:pet:parrot', 'sulphur-crested cockatoo:попугай/попугая:m:pet:parrot',
+    'lorikeet:попугай/попугая:m:pet:parrot', 'box turtle:черепаха:f:pet:turtle', 'terrapin:черепаха:f:pet:turtle', 'common iguana:игуана:f:pet:iguana', 'hen:курица:f:pet:chicken',
+    'cock:петух/петуха:m:pet:rooster', 'drake:утка:f:pet:duck', 'ox:корова:f:pet:cow', 'hog:свинка:f:pet:pig', 'ram:баран/барана:m:pet:sheep', 'sorrel:лошадь:f:pet:horse',
+    'monarch:бабочка:f:pet:butterfly', 'admiral:бабочка:f:pet:butterfly', 'ladybug:божья коровка:f:pet:ladybug', 'bee:пчела:f:pet:bee', 'snail:улитка:f:pet:snail'
+  ].forEach(row => {
+    const [label, ru, g, kind, en, loc] = row.split(':');
+    let [n, a] = ru.split('/');
+    if (!a) a = g === 'f' ? n.split(' ').map(w => w.endsWith('ая') ? w.slice(0, -2) + 'ую' : w.endsWith('яя') ? w.slice(0, -2) + 'юю' : w.endsWith('а') ? w.slice(0, -1) + 'у' : w.endsWith('я') ? w.slice(0, -1) + 'ю' : w).join(' ') : n;
+    OBJ_IN[label] = [n, a, g, kind, en, loc || ''];
+  });
   const agree = (g, m, f, n, pl) => ({ m, f, n, pl })[g] || m;
   const OBJ_TPL = {
     ru: {
       food: [o => `о, ${o.n}!`, o => `это ${o.n}? выглядит вкусно`, o => `${o.n} 😍`, () => 'дай кусочек', o => `где брал ${o.a}?`, () => 'сколько стоит?', () => 'сам готовил?', o => `я тоже хочу ${o.a}`,
         () => 'приятного аппетита!', o => `ммм, ${o.n}`, () => 'вкусно?', () => 'а мне?', () => 'теперь я голодная', () => 'покажи поближе', o => `${agree(o.g, 'какой', 'какая', 'какое', 'какие')} ${agree(o.g, 'аппетитный', 'аппетитная', 'аппетитное', 'аппетитные')}`,
-        () => 'это на ужин?', () => 'рецепт пж', o => `обожаю ${o.a}`, () => 'откуда еда?', () => 'это доставка?'],
-      drink: [() => 'что пьёшь?', o => `о, ${o.n}`, () => 'за твоё здоровье 🥂', () => 'чай или кофе?', () => 'я тоже пью чай сейчас', () => 'приятного!', o => `${agree(o.g, 'красивый', 'красивая', 'красивое', 'красивые')} ${o.n}`, () => 'что там налито?', () => 'налей и мне'],
+        () => 'это на ужин?', () => 'рецепт пж', o => `обожаю ${o.a}`, () => 'откуда еда?', () => 'это доставка?', () => 'я бы съела всё', o => `${o.n} — моя слабость`, () => 'слюнки текут', () => 'поделишься?', () => 'выглядит как в ресторане'],
+      drink: [() => 'что пьёшь?', o => `о, ${o.n}`, () => 'за твоё здоровье 🥂', () => 'чай или кофе?', () => 'я тоже пью чай сейчас', () => 'приятного!', o => `${agree(o.g, 'красивый', 'красивая', 'красивое', 'красивые')} ${o.n}`,
+        () => 'что там налито?', () => 'налей и мне', () => 'чин-чин', () => 'вкусно?', () => 'я тоже хочу', () => 'что за напиток?'],
+      cook: [() => 'что готовишь?', () => 'шеф! 👨‍🍳', () => 'рецепт пж', () => 'что на ужин?', () => 'я голодный теперь', o => `о, ${o.n}`, () => 'пахнет наверно на весь дом', () => 'позови на ужин', () => 'ты умеешь готовить?', () => 'не сожги 😂'],
       thing: [o => `что за ${o.n}?`, o => `покажи ${o.a} поближе`, o => `${agree(o.g, 'классный', 'классная', 'классное', 'классные')} ${o.n}`, o => `где брал ${o.a}?`, o => `сколько ${agree(o.g, 'стоил', 'стоила', 'стоило', 'стоили')}?`,
-        o => `о, ${o.n}!`, o => `это ${agree(o.g, 'новый', 'новая', 'новое', 'новые')} ${o.n}?`, o => `хочу ${agree(o.g, 'такой', 'такую', 'такое', 'такие')} же`, () => 'а какой фирмы?', () => 'дай ссылку', o => `${o.n} топ`, () => 'покажи ещё раз'],
+        o => `о, ${o.n}!`, o => `это ${agree(o.g, 'новый', 'новая', 'новое', 'новые')} ${o.n}?`, o => `хочу ${agree(o.g, 'такой', 'такую', 'такое', 'такие')} же`, () => 'а какой фирмы?', () => 'дай ссылку', o => `${o.n} топ`, () => 'покажи ещё раз',
+        o => `у меня ${agree(o.g, 'такой', 'такая', 'такое', 'такие')} же`, () => 'зачем тебе это? 😂', () => 'это подарок?'],
+      tech: [o => `что за ${o.n}?`, () => 'какая модель?', o => `${agree(o.g, 'новый', 'новая', 'новое', 'новые')} ${o.n}?`, o => `сколько ${agree(o.g, 'стоил', 'стоила', 'стоило', 'стоили')}?`, () => 'дай обзор',
+        o => `${agree(o.g, 'крутой', 'крутая', 'крутое', 'крутые')} ${o.n}`, () => 'мечтаю о таком', () => 'это для стримов?', o => `покажи ${o.a} поближе`, () => 'техника топ', () => 'айфон или андроид? 😅', () => 'дорого наверно'],
+      wear: [o => `${agree(o.g, 'классный', 'классная', 'классное', 'классные')} ${o.n}`, o => `где брал ${o.a}?`, () => 'тебе идёт', () => 'стильно', () => 'это какой бренд?', () => 'покажи образ целиком', o => `ссылку на ${o.a}!`,
+        o => `хочу ${agree(o.g, 'такой', 'такую', 'такое', 'такие')} же`, o => `${o.n} 🔥`, () => 'модно', () => 'лук дня', () => 'сколько стоит?', () => 'очень к лицу', () => 'вкус есть', o => `${agree(o.g, 'новый', 'новая', 'новое', 'новые')}?`],
+      music: [() => 'сыграй что-нибудь!', () => 'давай песню!', o => `${o.n} 🔥`, () => 'давно играешь?', () => 'сыграешь мою любимую?', () => 'ты музыкант?', () => 'учился в музыкалке?', () => 'хочу послушать',
+        o => `${agree(o.g, 'красивый', 'красивая', 'красивое', 'красивые')} ${o.n}`, () => 'концерт будет?', () => 'научишь?', () => 'вот это талант'],
+      sport: [() => 'ты спортсмен?', () => 'покажи упражнение', () => 'мотивируешь 💪', () => 'давай подход!', () => 'где тренируешься?', o => `о, ${o.n}!`, () => 'спорт — это жизнь', () => 'сколько раз сможешь?',
+        () => 'я тоже хочу начать', () => 'мощь', () => 'сколько весит?', () => 'зарядка в прямом эфире?'],
+      vehicle: [o => `${agree(o.g, 'крутой', 'крутая', 'крутое', 'крутые')} ${o.n}!`, () => 'какая марка?', () => 'прокатишь?', () => 'куда едешь?', () => 'это твоя?', () => 'сколько стоит?', o => `о, ${o.n}`, () => 'мечта',
+        () => 'покажи поближе', () => 'быстро едет?', () => 'аккуратнее там'],
+      place: [o => `ты ${o.loc}?`, o => `о, ${o.loc}!`, () => 'где это?', () => 'какое красивое место', () => 'возьми меня с собой', () => 'покажи всё вокруг', () => 'хочу туда', () => 'это какой город?', o => `давно ${o.loc}?`,
+        () => 'атмосферно', () => 'уютно там', () => 'покажи вид', o => `обожаю, когда ты ${o.loc}`],
       pet: [o => `ААА ${o.n} 😍`, () => 'как зовут?', () => 'покажи ещё', o => `${agree(o.g, 'какой', 'какая', 'какое', 'какие')} ${agree(o.g, 'милый', 'милая', 'милое', 'милые')}!`, () => 'сколько лет?', () => 'погладь от меня', () => 'ми-ми-ми',
-        o => `это ${agree(o.g, 'твой', 'твоя', 'твоё', 'твои')}?`, () => '😍😍😍', () => 'дай посмотреть поближе']
+        o => `это ${agree(o.g, 'твой', 'твоя', 'твоё', 'твои')}?`, () => '😍😍😍', () => 'дай посмотреть поближе', o => `${o.n} — звезда эфира`, () => 'я умираю от милоты', () => 'можно погладить?']
     },
     en: {
       food: [o => `ooh ${o.n}!`, o => `is that ${o.n}? looks so good`, o => `${o.n} 😍`, () => 'can i have some', () => 'where did you get it?', () => 'how much was it?', () => 'did you make it?', () => 'enjoy your meal!', () => 'is it good?', () => "i'm hungry now", () => 'show closer', () => 'recipe pls'],
       drink: [() => 'what are you drinking?', o => `oh ${o.n}`, () => 'cheers 🥂', () => 'tea or coffee?', () => "i'm drinking tea too", o => `nice ${o.n}`],
+      cook: [() => 'what are you cooking?', () => 'chef! 👨‍🍳', () => 'recipe pls', () => "what's for dinner?", () => "don't burn it 😂", o => `oh a ${o.n}`],
       thing: [o => `what's that ${o.n}?`, o => `show the ${o.n} closer`, o => `cool ${o.n}`, () => 'where did you get it?', () => 'how much was it?', o => `oh a ${o.n}!`, o => `is that a new ${o.n}?`, () => 'i want one', () => 'what brand?', () => 'link pls'],
+      tech: [o => `which ${o.n} is that?`, () => 'what model?', o => `new ${o.n}?`, () => 'how much was it?', () => 'review it!', o => `nice ${o.n}`],
+      wear: [o => `love the ${o.n}`, () => 'where is it from?', () => 'suits you', () => 'so stylish', () => 'what brand?', () => 'show the whole fit', () => 'link pls'],
+      music: [() => 'play something!', () => 'sing a song!', o => `${o.n} 🔥`, () => 'how long have you played?', () => 'play my favorite?', () => 'so talented'],
+      sport: [() => 'are you an athlete?', () => 'show an exercise', () => 'so motivating 💪', () => 'one more set!', o => `oh ${o.n}!`],
+      vehicle: [o => `nice ${o.n}!`, () => 'what brand?', () => 'take me for a ride', () => 'where are you going?', () => 'is it yours?'],
+      place: [o => `are you at the ${o.n}?`, () => 'where is this?', () => 'such a nice place', () => 'take me with you', () => 'show around', () => 'i want to go there'],
       pet: [o => `OMG A ${o.n.toUpperCase()} 😍`, () => "what's their name?", () => 'show more', () => 'so cute!', () => 'how old?', () => 'pet them for me', () => '😍😍😍']
+    }
+  };
+  /* people in the frame and the look of the scene */
+  const SCENE_TPL = {
+    ru: {
+      company: ['кто это рядом?', 'привет второму 👋', 'вас двое!', 'познакомь нас', 'кто это с тобой?', 'передай привет', 'пусть тоже скажет привет', 'о, гость в кадре', 'вы вместе? 😍', 'дуэт!', 'а это кто?', 'скажи, чтобы помахали', 'вдвоём веселее', 'новенький в кадре 👀'],
+      crowd: ['сколько вас там?', 'вечеринка?', 'всем привет в кадре!', 'вот это компания', 'это туса?', 'передай всем привет', 'где вы собрались?', 'какой повод?', 'ого, сколько людей', 'возьмите меня к себе', 'покажи всех'],
+      absent: ['куда пропал?', 'алло, ты где?', 'эфир без стримера 😂', 'мы ждём', 'вернись!', 'стример ушёл за чаем', 'кто-нибудь видит стримера?', 'пустой кадр...', 'ау', 'я подожду'],
+      back: ['вернулся!', 'о, ты тут', 'наконец-то', 'с возвращением', 'где был?', 'мы скучали', 'ура, ты вернулся'],
+      camon: ['о, камера включилась', 'вот ты где 👋', 'привет!', 'наконец-то видно', 'покажи, где ты', 'красота в кадре'],
+      dark: ['темновато', 'включи свет', 'ничего не видно', 'ночной вайб', 'атмосферно в темноте', 'свет бы добавить', 'как в фильме ужасов 😅', 'ты в темноте сидишь?'],
+      bright: ['как светло', 'солнце!', 'глаза слепит 😎', 'светло и уютно', 'какой свет хороший', 'солнечно у тебя'],
+      warm: ['какой тёплый свет', 'уютно', 'вайб как у камина', 'тёплая лампа, кайф', 'атмосфера уютная', 'как вечером дома'],
+      cool: ['холодный свет', 'свет как в кино', 'прохладная атмосфера', 'это лампа такая?', 'синеватый свет'],
+      neon: ['неон 🔥', 'вайб как в клубе', 'подсветка огонь', 'какая подсветка', 'киберпанк', 'где взять такую ленту?'],
+      green: ['природа!', 'зелень вокруг 😍', 'ты в парке?', 'свежо', 'лес?', 'как красиво зелено'],
+      sky: ['небо красивое', 'какое небо', 'погода класс', 'солнечно у тебя', 'облака 😍'],
+      sunset: ['закат 😍', 'какой закат', 'золотой час', 'небо огонь', 'романтика'],
+      colorful: ['какие яркие цвета', 'красочно', 'глаза радуются', 'сочная картинка'],
+      blurry: ['камера мыльная', 'протри камеру', 'не в фокусе', 'размыто что-то'],
+      shaky: ['камера трясётся', 'ты идёшь куда-то?', 'укачивает 😅', 'ты в машине?', 'поставь телефон', 'куда бежим?'],
+      newscene: ['о, новое место', 'где ты теперь?', 'куда переместился?', 'покажи, где ты', 'другой вид', 'смена локации!'],
+      backcam: ['покажи себя', 'что за вид?', 'вернись в кадр', 'а где ты?', 'красиво, но мы хотим тебя']
+    },
+    en: {
+      company: ["who's next to you?", 'hi to your friend 👋', 'there are two of you!', 'introduce us', 'say hi to them', 'a guest!', 'duo!'],
+      crowd: ['how many of you are there?', 'party?', 'hi everyone!', 'what a crew', "what's the occasion?", 'show everyone'],
+      absent: ['where did you go?', 'hello?', 'stream without the streamer 😂', "we're waiting", 'come back!', 'empty frame...'],
+      back: ["you're back!", 'there you are', 'finally', 'welcome back', 'missed you'],
+      camon: ['camera is on!', 'there you are 👋', 'hi!', 'finally we can see you'],
+      dark: ["it's dark", 'turn on the light', "can't see anything", 'night vibes', 'horror movie vibes 😅'],
+      bright: ['so bright', 'sunny!', 'great lighting'],
+      warm: ['such warm light', 'so cozy', 'fireplace vibes'],
+      cool: ['cold light', 'cinematic lighting', 'is that a lamp?'],
+      neon: ['neon 🔥', 'club vibes', 'love the lights', 'cyberpunk'],
+      green: ['nature!', 'so green', 'are you in a park?'],
+      sky: ['beautiful sky', 'nice weather', 'clouds 😍'],
+      sunset: ['sunset 😍', 'golden hour', 'the sky is on fire'],
+      colorful: ['so colorful', 'love the colors'],
+      blurry: ['camera is blurry', 'wipe the camera', 'out of focus'],
+      shaky: ['camera is shaking', 'are you walking?', 'motion sickness 😅', 'are you driving?'],
+      newscene: ['new place!', 'where are you now?', 'change of scenery!'],
+      backcam: ['show yourself', "what's that view?", 'come back in frame']
     }
   };
   const det = { state: 'idle', coco: null, mnet: null, busy: false };
@@ -3016,30 +3224,124 @@ const ANSHLAG_FACES = {
     }
   }
   function reactToObject(e) {
-    const en = S.lang === 'en', o = en ? { n: e[4], a: e[4], g: 'm' } : { n: e[0], a: e[1], g: e[2] };
-    const tpl = (en ? OBJ_TPL.en : OBJ_TPL.ru)[e[3]];
+    const en = S.lang === 'en', o = en ? { n: e[4], a: e[4], g: 'm', loc: e[4] } : { n: e[0], a: e[1], g: e[2], loc: e[5] || '' };
+    const tpl = (en ? OBJ_TPL.en : OBJ_TPL.ru)[e[3]] || (en ? OBJ_TPL.en : OBJ_TPL.ru).thing;
     let at = rnd(500, 1100);
     [...tpl].sort(() => Math.random() - .5).slice(0, ri(3, 6)).forEach(f => {
       at += rnd(350, 1000);
       setTimeout(() => { if (live) addLine('msg', makeNick(), humanize(f(o))); }, at);
     });
   }
+  function sceneReact(key, n) {
+    const pool = (SCENE_TPL[S.lang] || SCENE_TPL.ru)[key];
+    if (pool) crowdPool(pool, n || ri(2, 4));
+  }
+  /* look of the frame from its pixels: light, colour, sky, greenery, sharpness, motion */
+  const anaCanvas = document.createElement('canvas');
+  anaCanvas.width = anaCanvas.height = 64;
+  let prevAna = null, calmTicks = 0, shakyTicks = 0, lastAtm = 0, sceneNow = [], camHello = false;
+  const tagTicks = new Map(), tagSeen = new Map();
+  function analyzeFrame(el) {
+    const N = 64, g = anaCanvas.getContext('2d', { willReadFrequently: true });
+    g.drawImage(el, 0, 0, N, N);
+    const d = g.getImageData(0, 0, N, N).data, n = N * N, gray = new Float32Array(n);
+    let Y = 0, sat = 0, warm = 0, cool = 0, green = 0, neon = 0, sky = 0, sunset = 0;
+    for (let i = 0; i < n; i++) {
+      const r = d[i * 4], gg = d[i * 4 + 1], b = d[i * 4 + 2], mx = Math.max(r, gg, b), mn = Math.min(r, gg, b), c = mx - mn;
+      const y = .299 * r + .587 * gg + .114 * b, s = mx ? c / mx : 0;
+      let h = 0;
+      if (c) { h = mx === r ? ((gg - b) / c) % 6 : mx === gg ? (b - r) / c + 2 : (r - gg) / c + 4; h = (h * 60 + 360) % 360; }
+      gray[i] = y; Y += y; sat += s;
+      if (r - b > 30 && y > 60) warm++;
+      if (b - r > 25 && y > 50) cool++;
+      if (s > .3 && h > 70 && h < 165 && y > 40) green++;
+      if (s > .45 && h > 260 && h < 335 && y > 40) neon++;
+      if (i < n / 3) {
+        if (s > .2 && h > 190 && h < 245 && y > 120) sky++;
+        if (s > .35 && (h < 40 || h > 330) && y > 90) sunset++;
+      }
+    }
+    let lap = 0, lm = 0, cnt = 0;
+    for (let yy = 1; yy < N - 1; yy++) for (let xx = 1; xx < N - 1; xx++) {
+      const i = yy * N + xx, v = 4 * gray[i] - gray[i - 1] - gray[i + 1] - gray[i - N] - gray[i + N];
+      lap += v * v; lm += v; cnt++;
+    }
+    let motion = 0;
+    if (prevAna) { for (let i = 0; i < n; i++) motion += Math.abs(gray[i] - prevAna[i]); motion /= n; }
+    prevAna = gray;
+    return { Y: Y / n, sat: sat / n, warm: warm / n, cool: cool / n, green: green / n, neon: neon / n, sky: sky / (n / 3), sunset: sunset / (n / 3), sharp: lap / cnt - (lm / cnt) ** 2, motion };
+  }
+  function handleAtmosphere(a) {
+    const tags = [];
+    if (a.Y < 50) tags.push('dark'); else if (a.Y > 185) tags.push('bright');
+    if (a.neon > .16) tags.push('neon'); else if (a.warm > .45) tags.push('warm'); else if (a.cool > .35) tags.push('cool');
+    if (a.green > .3) tags.push('green');
+    if (a.sunset > .3) tags.push('sunset'); else if (a.sky > .35) tags.push('sky');
+    if (a.sat > .5 && !tags.some(t => t === 'green' || t === 'neon' || t === 'sunset')) tags.push('colorful');
+    if (a.sharp < 25 && a.Y > 50) tags.push('blurry');
+    if (bgMode === 'camera' && !screenOn) {
+      shakyTicks = a.motion > 26 ? shakyTicks + 1 : 0;
+      if (shakyTicks >= 2) tags.push('shaky');
+      if (a.motion > 48 && calmTicks >= 3) tags.push('newscene');
+      calmTicks = a.motion < 14 ? calmTicks + 1 : 0;
+      if (facing === 'environment' && !Math.floor(Math.random() * 6)) tags.push('backcam');
+    }
+    const words = { dark: 'dark', bright: 'bright', neon: 'neon lights', warm: 'warm light', cool: 'cold light', green: 'greenery', sunset: 'sunset sky', sky: 'blue sky', colorful: 'very colorful', blurry: 'blurry', shaky: 'shaky camera', newscene: 'new place' };
+    sceneNow = tags.map(t => words[t]).filter(Boolean);
+    const nowT = Date.now(), present = new Set(tags);
+    for (const k of [...tagTicks.keys()]) if (!present.has(k)) tagTicks.delete(k);
+    if (S.ai === 'key' && canSee()) return;
+    const PRIO = ['newscene', 'shaky', 'backcam', 'sunset', 'neon', 'green', 'sky', 'dark', 'bright', 'warm', 'cool', 'blurry', 'colorful'];
+    tags.forEach(t => tagTicks.set(t, (tagTicks.get(t) || 0) + 1));
+    for (const t of tags.sort((x, y) => PRIO.indexOf(x) - PRIO.indexOf(y))) {
+      const ticks = tagTicks.get(t);
+      const need = t === 'newscene' || t === 'backcam' ? 1 : t === 'blurry' ? 3 : 2;
+      const cool = t === 'blurry' ? 480000 : t === 'shaky' || t === 'newscene' ? 120000 : 300000;
+      if (ticks >= need && nowT - (tagSeen.get(t) || 0) > cool && nowT - lastAtm > 30000 && elapsed() > 20) {
+        tagSeen.set(t, nowT); lastAtm = nowT;
+        sceneReact(t);
+        break;
+      }
+    }
+  }
+  let personTicks = 0, absentTicks = 0, isAbsent = false, lastPeople = 0, peopleNow = 0;
+  function handlePeople(count) {
+    peopleNow = count;
+    if (S.ai === 'key' && canSee()) return;
+    const nowT = Date.now(), selfie = bgMode === 'camera' && facing === 'user' && !screenOn;
+    if (selfie) {
+      absentTicks = count === 0 ? absentTicks + 1 : 0;
+      if (absentTicks === 3 && !isAbsent) { isAbsent = true; sceneReact('absent', ri(3, 5)); }
+      if (count > 0 && isAbsent) { isAbsent = false; sceneReact('back'); }
+    }
+    personTicks = count >= 2 ? personTicks + 1 : 0;
+    if (personTicks === 2 && nowT - lastPeople > 180000) { lastPeople = nowT; sceneReact(count >= 3 ? 'crowd' : 'company', ri(3, 5)); }
+  }
   async function detectTick() {
     if (!live || !S.objects || inViewer || camOff) return;
     const src = frameSource();
-    if (!src) { detectedNow = []; return; }
+    if (!src) { detectedNow = []; sceneNow = []; prevAna = null; peopleNow = 0; return; }
+    if (document.hidden) return;
+    if (bgMode === 'camera' && !camHello && !screenOn) { camHello = true; setTimeout(() => sceneReact('camon', ri(2, 3)), 1500); }
+    try { handleAtmosphere(analyzeFrame(src[0])); } catch (e) {}
     if (det.state === 'idle') { initDetector(); return; }
-    if (det.state !== 'ready' || det.busy || document.hidden) return;
+    if (det.state !== 'ready' || det.busy) return;
     det.busy = true;
     try {
       const found = new Map();
-      (await det.coco.detect(src[0], 10, .55)).forEach(d => { const e = OBJ[d.class]; if (e) found.set(e[0], e); });
+      let persons = 0;
+      (await det.coco.detect(src[0], 15, .5)).forEach(d => {
+        if (d.class === 'person') { if (d.score > .55) persons++; return; }
+        const e = d.score >= .55 && OBJ[d.class];
+        if (e) found.set(e[0], e);
+      });
       if (det.mnet) (await det.mnet.classify(src[0], 3)).forEach(c => {
-        if (c.probability < .35) return;
+        if (c.probability < .3) return;
         const e = OBJ_IN[String(c.className).split(',')[0].trim().toLowerCase()];
         if (e) found.set(e[0], e);
       });
       detectedNow = [...found.keys()];
+      handlePeople(persons);
       if (S.ai === 'key' && canSee()) return;
       const nowT = Date.now(), next = new Map();
       for (const [name, e] of found) {
@@ -3129,6 +3431,7 @@ const ANSHLAG_FACES = {
     stats.comments = 0; stats.hearts = 0; stats.don = {};
     likes = Math.round(S.target * rnd(2, 6)); gifters.clear(); donors.clear(); renderTopFans();
     boost = 1; passed.clear(); unpin(); closeLineMenu();
+    camHello = false; isAbsent = false; absentTicks = 0; personTicks = 0; tagSeen.clear(); objSeen.clear();
     chatEl.textContent = '';
     history.length = 0;
     viewers = S.target * (seed ? .35 : 0); peak = Math.round(viewers);
