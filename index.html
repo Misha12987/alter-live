@@ -423,6 +423,16 @@ input[type=range]{width:100%;margin:4px 0;accent-color:var(--onair)}
 
 .ai-key{display:flex;flex-direction:column;gap:8px}
 .sub-label{margin-top:4px;font-size:12.5px;color:var(--muted)}
+.label.sub{margin-top:6px;font-size:13px;font-weight:500;letter-spacing:0;text-transform:none}
+.ava-row .text-in{flex:1;min-width:0;width:auto;height:42px}
+.wave-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.wave-grid .btn{height:42px;padding:0 6px;font-size:13.5px}
+.pq-list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:6px}
+.pq{display:flex;align-items:center;gap:10px;min-height:40px;padding:4px 4px 4px 12px;border-radius:11px;background:rgba(247,240,234,.05);font-size:13.5px}
+.pq-t{flex:none;font-weight:600;color:var(--brass);font-variant-numeric:tabular-nums}
+.pq-b{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pq-x{flex:none;width:36px;height:36px;border-radius:9px;border:0;background:transparent;color:var(--muted);font-size:15px;cursor:pointer}
+.live-badge,.live-count,.more-btn{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
 .ai-status{margin:0;font-size:13px;line-height:1.45}
 .ai-status:empty{display:none}
 .ai-status.ok{color:#9ad7a8}
@@ -561,14 +571,6 @@ input[type=range]{width:100%;margin:4px 0;accent-color:var(--onair)}
             <button class="menu-item" id="lookBtn" type="button" role="menuitem" hidden>
               <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8V5.5A1.5 1.5 0 0 1 5.5 4H8M16 4h2.5A1.5 1.5 0 0 1 20 5.5V8M20 16v2.5a1.5 1.5 0 0 1-1.5 1.5H16M8 20H5.5A1.5 1.5 0 0 1 4 18.5V16"/><path d="M6.5 12s2-3.6 5.5-3.6 5.5 3.6 5.5 3.6-2 3.6-5.5 3.6-5.5-3.6-5.5-3.6z"/><circle cx="12" cy="12" r="1.5"/></svg>
               <span>Показать кадр чату</span>
-            </button>
-            <button class="menu-item" id="raidBtn" type="button" role="menuitem">
-              <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="8.5" r="3.4"/><path d="M3 19.5c.7-3.4 3-5.4 6-5.4s5.3 2 6 5.4M18 15V5M14.8 8.2 18 5l3.2 3.2"/></svg>
-              <span>Наплыв зрителей</span>
-            </button>
-            <button class="menu-item" id="donNowBtn" type="button" role="menuitem">
-              <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><path d="M14.8 9.2c-.5-1-1.6-1.6-2.8-1.6-1.6 0-2.8.9-2.8 2.1 0 2.9 5.8 1.6 5.8 4.6 0 1.2-1.3 2.1-3 2.1-1.3 0-2.4-.6-2.9-1.6M12 5.8v1.8M12 16.4v1.8"/></svg>
-              <span>Донат прямо сейчас</span>
             </button>
             <button class="menu-item" id="gearBtn" type="button" role="menuitem">
               <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h9M18 7h2M4 17h3M12 17h8"/><circle cx="15.5" cy="7" r="2.3"/><circle cx="9.5" cy="17" r="2.3"/></svg>
@@ -712,6 +714,39 @@ input[type=range]{width:100%;margin:4px 0;accent-color:var(--onair)}
       </div>
 
       <div class="field">
+        <label class="label" for="setFollowers">Подписчики</label>
+        <input class="text-in" id="setFollowers" type="number" min="0" max="999000000" step="1" inputmode="numeric" placeholder="например, 12500">
+        <p class="hint" id="followersHint"></p>
+        <button class="btn ghost" id="fitViewers" type="button">Подогнать зрителей под подписчиков</button>
+      </div>
+
+      <div class="field">
+        <div class="label">Аудитория</div>
+        <div class="label sub"><label for="setFem">Кто смотрит</label><output id="femOut" for="setFem">поровну</output></div>
+        <input id="setFem" type="range" min="0" max="100" step="5">
+        <div class="scale"><span>Парни</span><span>Поровну</span><span>Девушки</span></div>
+        <div class="sub-label">Возраст</div>
+        <div class="seg" role="radiogroup" aria-label="Возраст зрителей">
+          <input type="radio" name="age" id="agTeen" value="teen"><label for="agTeen">Школьники</label>
+          <input type="radio" name="age" id="agYoung" value="young"><label for="agYoung">Молодёжь</label>
+          <input type="radio" name="age" id="agAdult" value="adult"><label for="agAdult">Взрослые</label>
+        </div>
+        <label class="sub-label" for="setCities">Откуда зрители</label>
+        <input class="text-in" id="setCities" type="text" maxlength="200" autocomplete="off" placeholder="Москва, Казань, Минск">
+        <div class="sub-label">Иностранцы в чате</div>
+        <div class="seg" role="radiogroup" aria-label="Иностранцы в чате">
+          <input type="radio" name="foreign" id="frNone" value="none"><label for="frNone">Нет</label>
+          <input type="radio" name="foreign" id="frSome" value="some"><label for="frSome">Немного</label>
+          <input type="radio" name="foreign" id="frMany" value="many"><label for="frMany">Много</label>
+        </div>
+        <div class="label sub"><label for="setHaters">Хейтеры</label><output id="hatersOut" for="setHaters">нет</output></div>
+        <input id="setHaters" type="range" min="0" max="40" step="1">
+        <div class="label sub"><label for="setNoAva">Без фото в профиле</label><output id="noAvaOut" for="setNoAva">15%</output></div>
+        <input id="setNoAva" type="range" min="0" max="80" step="5">
+        <p class="hint">Меняет ники, аватарки, города и манеру писать. Школьники пишут без заглавных и со сленгом, взрослые аккуратнее и вежливее. Хейтеры добавляются к любому настроению чата.</p>
+      </div>
+
+      <div class="field">
         <div class="label">Скорость чата</div>
         <div class="seg" role="radiogroup" aria-label="Скорость чата">
           <input type="radio" name="speed" id="spCalm" value="calm"><label for="spCalm">Спокойно</label>
@@ -797,8 +832,6 @@ input[type=range]{width:100%;margin:4px 0;accent-color:var(--onair)}
         <div class="switch-row"><label for="setDon">Донаты</label><input class="switch" id="setDon" type="checkbox"></div>
         <div class="switch-row"><label for="setSound">Звук доната</label><input class="switch" id="setSound" type="checkbox"></div>
         <div class="switch-row"><label for="setTts">Озвучка доната голосом</label><input class="switch" id="setTts" type="checkbox"></div>
-        <div class="switch-row"><label for="setTaps">Секретные двойные тапы</label><input class="switch" id="setTaps" type="checkbox"></div>
-        <p class="hint">Двойной тап по экрану: слева вверху чат кричит от восторга (или пишет твои фразы), справа вверху задаёт вопросы, слева внизу смеётся, справа внизу приходит донат.</p>
         <div class="switch-row"><label for="setGoal">Сбор в эфире</label><input class="switch" id="setGoal" type="checkbox"></div>
         <div class="goal-set" id="goalSet">
           <label class="sub-label" for="setGoalTitle">На что собираем</label>
@@ -806,7 +839,6 @@ input[type=range]{width:100%;margin:4px 0;accent-color:var(--onair)}
           <label class="sub-label" for="setGoalSum">Цель, <span id="goalCur">₽</span></label>
           <input class="text-in" id="setGoalSum" type="number" min="1" step="1" inputmode="numeric">
         </div>
-        <button class="btn" id="testDon" type="button">Отправить тестовый донат</button>
       </div>
 
       <div class="field">
@@ -815,6 +847,88 @@ input[type=range]{width:100%;margin:4px 0;accent-color:var(--onair)}
       </div>
 
       <div class="sheet-foot">Alter Live · прототип. Все зрители, комментарии и донаты генерируются в приложении. Лица на аватарках зрителей сгенерированы нейросетью (100,000 Faces, generated.photos), таких людей не существует. Фоны и остальные фото взяты из набора ImageNet sample images. Камера, микрофон и свой ключ работают, когда файл открыт в браузере телефона по https, а не внутри окна Claude.</div>
+    </section>
+
+    <section class="sheet" id="secretSheet" role="dialog" aria-modal="true" aria-labelledby="secretTitle" hidden>
+      <div class="grab"></div>
+      <div class="sheet-head">
+        <h2 id="secretTitle">Скрытый пульт</h2>
+        <button class="close-btn js-close" type="button" aria-label="Закрыть пульт"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+      </div>
+      <p class="hint">Этого меню нет в настройках. Открывается, если подержать палец на счётчике зрителей, на надписи LIVE или на кнопке «⋯».</p>
+
+      <div class="field">
+        <div class="label">Зрители сейчас<output id="scNow">0</output></div>
+        <div class="ava-row"><input class="text-in" id="scViewers" type="number" min="1" max="1000000" inputmode="numeric" placeholder="Сколько поставить" aria-label="Число зрителей"><button class="btn" id="scViewersGo" type="button">Поставить</button></div>
+        <div class="ava-row"><button class="btn ghost" id="scRaid" type="button">Наплыв</button><button class="btn ghost" id="scDrop" type="button">Отток</button></div>
+        <p class="hint">Число меняется плавно, как в настоящем эфире.</p>
+      </div>
+
+      <div class="field">
+        <div class="label" id="scDonLabel">Донат</div>
+        <input class="text-in" id="scDonNick" type="text" maxlength="30" autocomplete="off" placeholder="Ник (пусто — случайный зритель)" aria-label="Ник">
+        <input class="text-in" id="scDonAmt" type="number" min="1" inputmode="numeric" placeholder="Сумма (пусто — случайная)" aria-label="Сумма">
+        <input class="text-in" id="scDonText" type="text" maxlength="140" autocomplete="off" placeholder="Текст (пусто — подберётся по теме)" aria-label="Текст">
+        <div class="seg" role="radiogroup" aria-label="Когда прислать">
+          <input type="radio" name="scDonWhen" id="scDonWhen0" value="0" checked><label for="scDonWhen0">Сейчас</label>
+          <input type="radio" name="scDonWhen" id="scDonWhen60" value="60"><label for="scDonWhen60">1 мин</label>
+          <input type="radio" name="scDonWhen" id="scDonWhen180" value="180"><label for="scDonWhen180">3 мин</label>
+          <input type="radio" name="scDonWhen" id="scDonWhen300" value="300"><label for="scDonWhen300">5 мин</label>
+        </div>
+        <button class="btn" id="scDonGo" type="button">Прислать донат</button>
+      </div>
+
+      <div class="field">
+        <div class="label">Комментарий от зрителя</div>
+        <input class="text-in" id="scComNick" type="text" maxlength="30" autocomplete="off" placeholder="Ник (пусто — случайный)" aria-label="Ник зрителя">
+        <input class="text-in" id="scComText" type="text" maxlength="140" autocomplete="off" placeholder="Например: а покажи кота!" aria-label="Текст комментария">
+        <div class="seg" role="radiogroup" aria-label="Когда написать">
+          <input type="radio" name="scComWhen" id="scComWhen0" value="0" checked><label for="scComWhen0">Сейчас</label>
+          <input type="radio" name="scComWhen" id="scComWhen60" value="60"><label for="scComWhen60">1 мин</label>
+          <input type="radio" name="scComWhen" id="scComWhen180" value="180"><label for="scComWhen180">3 мин</label>
+          <input type="radio" name="scComWhen" id="scComWhen300" value="300"><label for="scComWhen300">5 мин</label>
+        </div>
+        <button class="btn" id="scComGo" type="button">Написать в чат</button>
+      </div>
+
+      <div class="field">
+        <div class="label">Волна в чате</div>
+        <div class="wave-grid" id="waveGrid">
+          <button class="btn ghost" type="button" data-wave="support">Поддержка</button>
+          <button class="btn ghost" type="button" data-wave="hype">Восторг</button>
+          <button class="btn ghost" type="button" data-wave="funny">Смех</button>
+          <button class="btn ghost" type="button" data-wave="ask">Вопросы</button>
+          <button class="btn ghost" type="button" data-wave="hate">Хейт</button>
+          <button class="btn ghost" type="button" data-wave="follow">Подписки</button>
+        </div>
+        <p class="hint">Несколько зрителей сразу пишут в одном духе. «Подписки» — пачка новых подписчиков.</p>
+      </div>
+
+      <div class="field">
+        <div class="label">Запланировано</div>
+        <ul class="pq-list" id="scQueue"></ul>
+        <p class="hint" id="scQueueEmpty">Пока ничего. Донаты и комментарии с таймером появятся здесь.</p>
+      </div>
+
+      <div class="field">
+        <div class="label">Скрытые настройки</div>
+        <div class="switch-row"><label for="setTaps">Секретные двойные тапы</label><input class="switch" id="setTaps" type="checkbox"></div>
+        <p class="hint">Двойной тап по экрану: слева вверху чат кричит от восторга (или пишет твои фразы), справа вверху задаёт вопросы, слева внизу смеётся, справа внизу приходит донат.</p>
+        <div class="sub-label">Как часто донатят</div>
+        <div class="seg" role="radiogroup" aria-label="Как часто донатят">
+          <input type="radio" name="donRate" id="drRare" value="rare"><label for="drRare">Редко</label>
+          <input type="radio" name="donRate" id="drNormal" value="normal"><label for="drNormal">Обычно</label>
+          <input type="radio" name="donRate" id="drOften" value="often"><label for="drOften">Часто</label>
+        </div>
+        <div class="sub-label">Суммы донатов</div>
+        <div class="seg" role="radiogroup" aria-label="Суммы донатов">
+          <input type="radio" name="donSize" id="dsSmall" value="small"><label for="dsSmall">Скромные</label>
+          <input type="radio" name="donSize" id="dsNormal" value="normal"><label for="dsNormal">Обычные</label>
+          <input type="radio" name="donSize" id="dsBig" value="big"><label for="dsBig">Щедрые</label>
+        </div>
+        <div class="switch-row"><label for="setFollowKeep">Новые подписчики остаются</label><input class="switch" id="setFollowKeep" type="checkbox"></div>
+        <p class="hint">Подписчики, пришедшие за эфир, прибавляются к числу в настройках, и к следующему эфиру их становится больше.</p>
+      </div>
     </section>
 
     <section class="sheet" id="peopleSheet" role="dialog" aria-modal="true" aria-labelledby="peopleTitle" hidden>
@@ -1064,10 +1178,11 @@ const ANSHLAG_FACES = {
 
   /* ---------- settings ---------- */
   const KEY = 'anshlag:v1';
-  const DEF = { host: 'ваш_ник', target: 42000, speed: 'live', mode: 'normal', lang: 'ru', donations: true, sound: true, ai: 'off', provider: 'anthropic', apiKey: '', model: '', listen: false, vision: true, goal: true, goalTitle: 'Новый микрофон', goalSum: 10000, avatar: '', platform: 'ig', title: 'Болтаем и отвечаем на вопросы', verified: true, tts: true, topic: 'chat', custom: '', customRate: 'mid', regulars: '', secretTaps: true, countdown: true, objects: true };
+  const DEF = { host: 'ваш_ник', target: 42000, speed: 'live', mode: 'normal', lang: 'ru', donations: true, sound: true, ai: 'off', provider: 'anthropic', apiKey: '', model: '', listen: false, vision: true, goal: true, goalTitle: 'Новый микрофон', goalSum: 10000, avatar: '', platform: 'ig', title: 'Болтаем и отвечаем на вопросы', verified: true, tts: true, topic: 'chat', custom: '', customRate: 'mid', regulars: '', secretTaps: true, countdown: true, objects: true, followers: null, followKeep: true, fem: 50, age: 'young', cities: '', foreign: 'none', haters: 0, noAva: 15, donRate: 'normal', donSize: 'normal' };
   const S = Object.assign({}, DEF);
   try { const raw = localStorage.getItem(KEY); if (raw) Object.assign(S, JSON.parse(raw)); } catch (e) {}
   const save = () => { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) {} };
+  if (typeof S.followers !== 'number' || !isFinite(S.followers)) S.followers = Math.max(0, Math.round(S.target * 14.3 / 100) * 100);
 
   /* ---------- phrase banks ---------- */
   const compactNum = (n, dec, k, m) => n < 1000 ? String(n) : n < 1e6 ? (n < 10000 ? String(Math.floor(n / 100) / 10).replace('.', dec) : String(Math.floor(n / 1000))) + k : String(Math.floor(n / 1e5) / 10).replace('.', dec) + m;
@@ -1129,12 +1244,12 @@ const ANSHLAG_FACES = {
       hostBadge: 'Автор', giftSent: 'отправляет', likesWord: 'лайков', rankChip: n => `Топ за час · №${n}`, popChip: 'Популярное',
       tt: ['подпишись взаимно', 'первый!', 'лайк лайк лайк', 'топчик', 'отметь меня', 'кинула розу 🌹', 'дай привет', 'го в топ', 'кто из рекомендаций?', 'жмём лайки', 'сохранила эфир', 'ахах ну ты'],
       compact: n => compactNum(n, ',', ' тыс.', ' млн'),
-      subs: n => compactNum(n, ',', ' тыс.', ' млн') + ' ' + plural(n, ['подписчик', 'подписчика', 'подписчиков']),
+      subs: n => compactNum(n, ',', ' тыс.', ' млн') + ' ' + (n >= 1000 ? 'подписчиков' : plural(n, ['подписчик', 'подписчика', 'подписчиков'])),
       subEv: n => `подписка уже ${n} мес.!`,
       scSteps: [100, 200, 500, 1000, 2000, 5000],
       tw: ['KEKW', 'Pog', 'LUL', 'ору KEKW', 'PogChamp', 'monkaS', 'OMEGALUL', '+', '++++', 'W', 'W стример', 'гг', 'база', 'кринж', 'когда розыгрыш?', 'Kappa', '5Head', 'ЖИЗА', 'чат, это правда?', 'клип!'],
       dons: n => n.toLocaleString('ru-RU') + ' ' + plural(n, ['донат', 'доната', 'донатов']),
-      join: 'присоединяется', donWord: 'донат', from: 'от', cur: '₽',
+      join: 'присоединяется', donWord: 'донат', from: 'от', cur: '₽', followEv: 'подписывается на автора', twFollow: n => `${n}, спасибо за фоллоу! ❤️`,
       money: n => n.toLocaleString('ru-RU') + ' ₽',
       names: ['katya', 'dima', 'nastya', 'sasha', 'lena', 'vlad', 'masha', 'artem', 'polina', 'kirill', 'alina', 'egor', 'dasha', 'misha', 'vika', 'nikita', 'sonya', 'ilya', 'lera', 'max', 'yana', 'roma', 'liza', 'denis', 'kris', 'gleb', 'anya', 'timur', 'olya', 'stas', 'sveta', 'vanya'],
       words: ['kotik', 'zaya', 'solnce', 'moon', 'light', 'coffee', 'vibe', 'star', 'pixel', 'honey', 'mango', 'frost', 'lisa', 'lucky', 'cherry', 'nova', 'dark', 'tiny']
@@ -1200,7 +1315,7 @@ const ANSHLAG_FACES = {
       scSteps: [2, 5, 10, 20, 50, 100],
       tw: ['KEKW', 'Pog', 'LUL', 'PogChamp', 'monkaS', 'OMEGALUL', 'W', 'W streamer', 'L', 'Kappa', '5Head', 'gg', 'based', 'clip it', 'chat is this real', 'first time chatter here', 'lmao KEKW', '+1'],
       dons: n => n.toLocaleString('en-US') + (n === 1 ? ' donation' : ' donations'),
-      join: 'joined', donWord: 'donated', from: 'from', cur: '$',
+      join: 'joined', donWord: 'donated', from: 'from', cur: '$', followEv: 'followed the host', twFollow: n => `thanks for the follow, ${n}! ❤️`,
       money: n => '$' + n.toLocaleString('en-US'),
       names: ['emma', 'jake', 'olivia', 'liam', 'mia', 'noah', 'ava', 'ethan', 'chloe', 'mason', 'zoe', 'lucas', 'lily', 'ryan', 'grace', 'tyler', 'ella', 'josh', 'maya', 'dylan', 'sofia', 'alex', 'nina', 'sam', 'ruby', 'leo', 'kayla', 'ben'],
       words: ['moon', 'light', 'sunny', 'coffee', 'dream', 'vibe', 'star', 'pixel', 'honey', 'storm', 'mango', 'frost', 'bear', 'fox', 'lucky', 'cherry', 'nova', 'wild', 'tiny', 'real']
@@ -1356,6 +1471,8 @@ const ANSHLAG_FACES = {
   };
   function genLine() {
     const en = S.lang === 'en', g = Object.assign({}, en ? GEN.en : GEN.ru);
+    const uc = userCities();
+    if (uc.length && chance(.85)) g.city = en ? uc : uc.map(cityGen);
     g.p = pick;
     g.f = (x, m, f, n, pl) => ({ m, f, n, pl })[x] || m;
     g.from = () => g.p(g.from_ || (g.from_ = (en ? GEN.en : GEN.ru).from)).replace('{city}', g.p(g.city));
@@ -1381,17 +1498,149 @@ const ANSHLAG_FACES = {
     if (recentPicks.length > 80) recentPicks.shift();
     return x;
   }
-  function makeNick() {
-    const regs = regularsList();
-    if (regs.length && chance(.12)) return pick(regs);
-    const t = L(), n = pick(t.names);
-    let nick = buildNick(n, pick(t.words));
-    for (let i = 0; i < 3 && blocked.has(nick); i++) nick = buildNick(n, pick(t.words));
-    nickGender.set(nick, FEM.has(n) ? 'f' : MASC.has(n) ? 'm' : '');
+  /* audience: who watches (gender mix, age, cities, foreigners) shapes nicks, wording and avatars */
+  const WORLD_NAMES = ['carlos', 'mateo', 'lucia', 'joao', 'ana', 'yuki', 'hana', 'minho', 'arjun', 'priya', 'ahmet', 'elif', 'lukas', 'marie', 'giulia', 'luca', 'jakub', 'putri', 'diego', 'camila'];
+  ['lucia', 'ana', 'hana', 'priya', 'elif', 'marie', 'giulia', 'putri', 'camila'].forEach(n => FEM.add(n));
+  ['carlos', 'mateo', 'joao', 'minho', 'arjun', 'ahmet', 'lukas', 'luca', 'jakub', 'diego'].forEach(n => MASC.add(n));
+  const SURN = {
+    ru: ['ivanov', 'petrov', 'smirnov', 'kuznetsov', 'volkov', 'sokolov', 'popov', 'lebedev', 'kozlov', 'novikov', 'morozov', 'orlov', 'belov', 'fedorov', 'pavlov', 'zaitsev', 'egorov', 'makarov'],
+    en: ['smith', 'johnson', 'brown', 'miller', 'davis', 'wilson', 'taylor', 'clark', 'lewis', 'walker', 'hall', 'young', 'king', 'wright', 'scott', 'green', 'baker', 'adams', 'nelson', 'carter']
+  };
+  const AUD_T = {
+    ru: {
+      teen: ['имба', 'кринж 😭', 'рил', 'жиза', 'это база', 'вайб топ', 'сделай тренд', 'го коллаб 😭', 'завтра контрольная, а я тут', 'я с уроков смотрю 🤫', 'мама зовёт есть, а я тут', 'передай привет 7Б', 'ахахах пон', 'ну ты даёшь', 'кто тоже из школы?', 'краш 😳', 'это вообще законно?', 'лайкните мой коммент', 'го в тт', 'щас бы на каникулы', 'сигма', 'мы с подругой смотрим', 'ты в тт есть?', 'имбовый эфир', 'капец смешно 😭', 'я угараю', 'пон пон', 'лол кек'],
+      adult: ['Добрый вечер всем', 'Спасибо за эфир, очень интересно', 'Смотрю после работы, отдыхаю', 'Здравствуйте!', 'Поддерживаю', 'Очень приятно смотреть', 'Дети уснули, наконец смотрю спокойно', 'Только с работы', 'Подскажите, запись эфира будет?', 'Звук отличный, всё слышно', 'Интересная тема', 'Хорошего всем вечера', 'Во сколько следующий эфир?', 'Муж тоже смотрит, передаёт привет', 'Жена передаёт привет', 'Давно вас смотрю', 'Спасибо, полезно', 'А можно поподробнее?', 'Согласен с предыдущим комментарием', 'Хорошо ведёте, спокойно', 'С удовольствием смотрю', 'Приветствую из Подмосковья', 'Записал себе, спасибо', 'Очень душевно'],
+      follow: ['подписался!', 'всё, подписка есть ✅', 'подписался, давно надо было', '+1 подписчик 🙌', 'подписка оформлена', 'подписался с двух аккаунтов 😄', 'подписка есть ❤️', 'новенький, подписался'],
+      foreignR: ['о, иностранцы 😮', 'hello!', 'welcome!', 'нас смотрят из-за границы', 'переведите кто-нибудь 😂', 'hi 👋', 'интернационал в чате', 'привет гостям 👋']
+    },
+    en: {
+      teen: ['no way 😭', 'this is so real', 'slay', 'lowkey fire', "it's giving", 'do a trend', 'collab when 😭', 'test tomorrow and im here', 'watching in class 🤫', 'my mom is calling me lol', 'bro 💀', 'who else is in school?', 'like my comment pls', 'this is peak', 'no cap', 'im crying 😭', 'fr fr', 'me and my bestie are watching'],
+      adult: ['Good evening everyone', 'Thanks for the stream, really interesting', 'Watching after work, relaxing', 'Hello!', 'Agreed', 'Really enjoy watching', 'Kids are asleep, finally watching in peace', 'Just got off work', 'Will there be a replay?', 'Sound is great', 'Interesting topic', 'Have a nice evening all', 'What time is the next one?', 'My husband is watching too, says hi', 'My wife says hi', 'Been watching you for a while', 'Very helpful, thanks', 'Could you go into more detail?', 'Very calm and pleasant stream'],
+      follow: ['just followed!', 'followed ✅', 'new follower here 🙌', 'followed, should have done it ages ago', 'followed on my other account too 😄', 'follow done ❤️'],
+      foreignR: ['welcome!', 'hola 👋', 'chat is going international 🌍', 'hi from the US 👋', 'love that people watch from everywhere', 'translate pls 😂']
+    }
+  };
+  const WORLD_T = {
+    ru: ['hello from London 👋', 'hola! saludos desde México 🇲🇽', 'olá do Brasil 🇧🇷', 'hallo aus Berlin', 'bonjour de Paris 🇫🇷', "ciao dall'Italia 🇮🇹", "selam, Türkiye'den 🇹🇷", 'сәлем Алматыдан 👋', 'salom Toshkentdan', 'привіт усім 👋', 'gamarjoba from Tbilisi', 'barev from Yerevan', 'greetings from Poland 🇵🇱', 'hi from Serbia 🇷🇸', 'what language is this?', "I don't understand but I like it", 'translate pls 😅', 'love from India 🙏', 'nice stream!', 'привет! I learn Russian 🙂', 'spasibo 😄', 'beautiful language', 'hello from Germany', 'privet from Prague'],
+    en: ['hola desde Madrid 🇪🇸', 'saludos desde Argentina 🇦🇷', 'olá do Brasil 🇧🇷', 'manda um oi pro Brasil!', 'hallo aus Berlin 🇩🇪', 'bonjour de Montréal', "ciao dall'Italia 🇮🇹", 'merhaba from Istanbul', 'привет из Москвы 👋', 'namaste from Delhi 🙏', 'hello po from Manila 🇵🇭', 'halo dari Jakarta 🇮🇩', 'xin chào từ Hà Nội 🇻🇳', 'cześć z Polski 🇵🇱', 'hej från Stockholm', 'konnichiwa from Tokyo 🇯🇵', 'annyeong from Seoul 🇰🇷', 'qué bonito', 'que lindo 😍', 'muy bien', 'top demais', 'sehr cool']
+  };
+  const FOREIGN_P = { none: 0, some: .05, many: .16 };
+  function foreignComment() {
+    const ru = S.lang !== 'en';
+    let text, nick;
+    if (ru && chance(.45)) { nick = makeNick('en'); const t = T.en; text = humanize(pickFresh(pick([t.greet, t.praise, t.react, t.chat, t.ask]))).replace(/\{host\}/g, S.host); }
+    else { text = pickFresh(WORLD_T[ru ? 'ru' : 'en']); nick = makeNick(/[а-яёәі]/i.test(text) ? 'ru' : 'world'); }
+    addLine('msg', nick, text, { raw: true });
+    if (chance(.2)) setTimeout(() => { if (live) addLine('msg', makeNick(), humanize(pick(AUD_T[ru ? 'ru' : 'en'].foreignR))); }, rnd(1200, 3500));
+  }
+
+  /* cities from settings; Russian needs the genitive for "из …" */
+  function userCities() { return String(S.cities || '').split(/[,;\n]/).map(x => x.trim()).filter(Boolean).slice(0, 30); }
+  function cityGen(c) {
+    if (/[a-z]/i.test(c) || !/[а-яё]/i.test(c)) return c;
+    const noun = w => {
+      if (w.length < 3 || /[А-ЯЁ].*[А-ЯЁ]/.test(w)) return w;
+      const l = w.slice(-1).toLowerCase(), l2 = w.slice(-2).toLowerCase();
+      if (l2 === 'ль') return w.slice(0, -1) + 'я';
+      if (l === 'ь') return w.slice(0, -1) + 'и';
+      if (l === 'а') return w.slice(0, -1) + (/[гкхжшчщ]/i.test(w.slice(-2, -1)) ? 'и' : 'ы');
+      if (l === 'я') return w.slice(0, -1) + 'и';
+      if (l === 'й') return w.slice(0, -1) + 'я';
+      if (/[бвгдзклмнпрстфхцжшщч]/.test(l)) return w + 'а';
+      return w;
+    };
+    const adj = w => {
+      const e = w.slice(-2).toLowerCase();
+      if (e === 'ый' || e === 'ой') return w.slice(0, -2) + 'ого';
+      if (e === 'ий') return w.slice(0, -2) + (/[гкхжшчщ]/i.test(w.slice(-3, -2)) ? 'ого' : 'его');
+      if (e === 'ая') return w.slice(0, -2) + 'ой';
+      if (e === 'яя') return w.slice(0, -2) + 'ей';
+      if (e === 'ое') return w.slice(0, -2) + 'ого';
+      return null;
+    };
+    if (/-на-/i.test(c)) { const k = c.search(/-на-/i); return noun(c.slice(0, k)) + c.slice(k); }
+    const ws = c.split(/\s+/);
+    return ws.map((w, i) => {
+      const a = ws.length > 1 || /(ый|ий|ой)$/i.test(w) ? adj(w) : null;
+      if (a) return a;
+      if (i < ws.length - 1) return w;
+      const parts = w.split('-'); parts[parts.length - 1] = noun(parts[parts.length - 1]); return parts.join('-');
+    }).join(' ');
+  }
+  const CITY_RU = [['Москва', 'Москвы'], ['Питер', 'Питера'], ['Казань', 'Казани'], ['Самара', 'Самары'], ['Сочи', 'Сочи'], ['Минск', 'Минска'], ['Новосибирск', 'Новосибирска'], ['Краснодар', 'Краснодара'], ['Пермь', 'Перми'], ['Уфа', 'Уфы'], ['Ростов', 'Ростова'], ['Воронеж', 'Воронежа'], ['Тюмень', 'Тюмени'], ['Иркутск', 'Иркутска'], ['Владивосток', 'Владивостока'], ['Калининград', 'Калининграда'], ['Алматы', 'Алматы'], ['Тула', 'Тулы'], ['Ярославль', 'Ярославля'], ['Екатеринбург', 'Екатеринбурга'], ['Нижний', 'Нижнего'], ['Омск', 'Омска']];
+  function cityPick() {
+    const uc = userCities(), en = S.lang === 'en';
+    if (uc.length && chance(.85)) { const c = pick(uc); return { nom: c, gen: en ? c : cityGen(c) }; }
+    if (en) { const c = pick(GEN.en.city); return { nom: c, gen: c }; }
+    const c = pick(CITY_RU); return { nom: c[0], gen: c[1] };
+  }
+  function cityAnswer() {
+    const c = cityPick();
+    return pick(S.lang === 'en' ? [c.nom, `${c.nom} 👋`, `from ${c.nom}`, `${c.nom} here!`, `${c.nom}!`] : [c.nom, `${c.nom} 👋`, `из ${c.gen}`, `я из ${c.gen}!`, `${c.nom}, всем привет`, `${c.nom} 🙌`, `${c.nom} на связи`]);
+  }
+
+  /* Russian past-tense words agree with the viewer's gender: "я согласна" from a girl, "я согласен" from a guy */
+  const GW = ['согласна:согласен', 'устала:устал', 'рада:рад', 'голодная:голодный', 'счастлива:счастлив', 'уверена:уверен', 'соскучилась:соскучился', 'влюбилась:влюбился', 'плакала:плакал', 'умерла:умер', 'уснула:уснул', 'проснулась:проснулся', 'опоздала:опоздал', 'пропустила:пропустил', 'съела:съел', 'подписалась:подписался', 'вернулась:вернулся', 'обещала:обещал', 'сбежала:сбежал', 'отметила:отметил', 'получила:получил', 'попробовала:попробовал', 'подписана:подписан', 'довольна:доволен', 'готова:готов', 'новенькая:новенький', 'записала:записал', 'отвлеклась:отвлёкся', 'удержалась:удержался', 'успела:успел'].map(x => x.split(':'));
+  const G_TO = { f: new Map(GW.map(([f, m]) => [m, f])), m: new Map(GW.map(([f, m]) => [f, m])) };
+  const G_RX = new RegExp('(^|[^а-яё])(' + GW.flat().sort((a, b) => b.length - a.length).join('|') + ')(?=[^а-яё]|$)', 'gi');
+  const G_YOU = /(^|[^а-яё])(ты|тебя|тебе|тобой|вы|вас|вам|вами)(?=[^а-яё]|$)/i;
+  /* a nick typed by the host (regulars, the hidden panel) gets its gender from a name inside it: tula_misha → m */
+  function guessGender(nick) {
+    if (nickGender.has(nick)) return nickGender.get(nick);
+    for (const w of String(nick).toLowerCase().split(/[^a-z]+/)) { if (FEM.has(w)) return 'f'; if (MASC.has(w)) return 'm'; }
+    return '';
+  }
+  function genderize(text, g) {
+    if (!text || typeof text !== 'string' || (g !== 'f' && g !== 'm') || !/[а-яё]/i.test(text) || G_YOU.test(text)) return text;
+    return text.replace(/\(а\)/g, g === 'f' ? 'а' : '').replace(G_RX, (all, pre, w) => {
+      const lw = w.toLowerCase(), to = G_TO[g].get(lw);
+      if (!to) return all;
+      return pre + (w === w.toUpperCase() ? to.toUpperCase() : w[0] !== lw[0] ? cap(to) : to);
+    });
+  }
+  function audienceLine() {
+    const f = S.fem == null ? 50 : S.fem, uc = userCities();
+    return `- Audience: ${followersNow().toLocaleString('en-US')} followers. Viewers are ${f >= 70 ? 'mostly women and girls' : f <= 30 ? 'mostly men and guys' : 'a mix of men and women'}, ${({ teen: 'mostly school-age teens (lowercase, slang, emoji, very short messages)', adult: 'mostly adults 30+ (polite, proper capitalization and punctuation, few emoji)' })[S.age] || 'mostly young adults'}.` +
+      (uc.length ? ` Many write from: ${uc.join(', ')}.` : '') + (S.foreign === 'some' || S.foreign === 'many' ? ' Some viewers are foreigners and write in their own languages.' : '') +
+      (S.haters ? ` About ${S.haters}% of comments are mild trolling.` : '');
+  }
+
+  function makeNick(lg) {
+    lg = lg || S.lang;
+    if (lg === S.lang) { const regs = regularsList(); if (regs.length && chance(.12)) return pick(regs); }
+    const t = T[lg], names = lg === 'world' ? WORLD_NAMES : (t || L()).names, words = (t || T.en).words;
+    const want = chance((S.fem == null ? 50 : S.fem) / 100) ? 'f' : 'm';
+    const pool = names.filter(x => want === 'f' ? !MASC.has(x) : !FEM.has(x));
+    const n = pick(pool.length ? pool : names);
+    let nick = buildNick(n, pick(words), lg, want);
+    for (let i = 0; i < 3 && blocked.has(nick); i++) nick = buildNick(n, pick(words), lg, want);
+    nickGender.set(nick, FEM.has(n) ? 'f' : MASC.has(n) ? 'm' : want);
     if (nickGender.size > 400) nickGender.delete(nickGender.keys().next().value);
     return nick;
   }
-  function buildNick(n, w) {
+  function buildNick(n, w, lg, g) {
+    lg = lg || S.lang;
+    const age = S.age || 'young';
+    if (age === 'teen' && chance(.55)) {
+      switch (ri(0, 5)) {
+        case 0: return `${n}_${ri(2009, 2013)}`;
+        case 1: return `${n}.${pick(['tt', 'plays', 'games', 'yt', 'edits'])}`;
+        case 2: return `xx_${n}_xx`;
+        case 3: return `${n}_${pick(['cute', 'kawaii', 'sigma', 'pro', 'top'])}`;
+        case 4: return `${n}${ri(1, 9)}${ri(0, 9)}${ri(0, 9)}`;
+        default: return `${pick(['im', 'its', 'ya'])}_${n}`;
+      }
+    }
+    if (age === 'adult' && chance(.6)) {
+      const sn = lg === 'ru' ? pick(SURN.ru) + (g === 'f' ? 'a' : '') : pick(SURN.en);
+      switch (ri(0, 4)) {
+        case 0: return `${n}.${sn}`;
+        case 1: return `${cap(n)}${cap(sn)}`;
+        case 2: return `${n}${ri(1975, 1996)}`;
+        case 3: return `${sn}.${n.charAt(0)}`;
+        default: return `${n}_${sn}_${ri(70, 96)}`;
+      }
+    }
     switch (ri(0, 8)) {
       case 0: return `${n}_${pick(['2003', '2005', '98', '777', '01', '13', ri(2, 99)])}`;
       case 1: return `${n}.${w}`;
@@ -1399,7 +1648,7 @@ const ANSHLAG_FACES = {
       case 3: return `xx_${n}_xx`;
       case 4: return `${cap(n)}${cap(w)}`;
       case 5: return `${n}${ri(10, 999)}`;
-      case 6: return S.lang === 'ru' ? `prosto_${n}` : `its_${n}`;
+      case 6: return lg === 'ru' ? `prosto_${n}` : `its_${n}`;
       case 7: return `${n}__`;
       default: return `${n}_${w}`;
     }
@@ -1413,12 +1662,14 @@ const ANSHLAG_FACES = {
   }
   function humanize(t) {
     let s = t;
-    const hasEmoji = /\p{Extended_Pictographic}/u.test(s);
-    if (chance(.35)) s = s.toLowerCase();
-    if (chance(.3)) s = s.replace(/[.!]+$/, '');
-    if (chance(.12)) s = stretch(s);
-    if (chance(.04)) s = s.toUpperCase();
-    if (!hasEmoji && chance(.16)) s += ' ' + pick(EMO);
+    const age = S.age || 'young', hasEmoji = /\p{Extended_Pictographic}/u.test(s);
+    const P = age === 'teen' ? [.62, .55, .2, .07, .26] : age === 'adult' ? [.07, .15, .02, .01, .07] : [.35, .3, .12, .04, .16];
+    if (chance(P[0])) s = s.toLowerCase();
+    if (chance(P[1])) s = s.replace(/[.!]+$/, '');
+    if (chance(P[2])) s = stretch(s);
+    if (chance(P[3])) s = s.toUpperCase();
+    if (!hasEmoji && chance(P[4])) s += ' ' + pick(EMO);
+    if (age === 'adult' && chance(.75)) s = cap(s);
     return s;
   }
 
@@ -1450,10 +1701,10 @@ const ANSHLAG_FACES = {
   function avatar(nick) {
     const el = document.createElement('span');
     el.className = 'ava';
-    const r = mulberry(hashOf(nick)), roll = r();
-    if (!FACES || roll < .15) el.style.backgroundImage = DEFAULT_AVA;
-    else if (roll < .45) el.style.backgroundImage = `url("${pickFace(r, 'o')}")`;
-    else el.style.backgroundImage = `url("${pickFace(r, nickGender.get(nick) || (r() < .55 ? 'f' : 'm'))}")`;
+    const r = mulberry(hashOf(nick)), roll = r(), none = (S.noAva == null ? 15 : S.noAva) / 100;
+    if (!FACES || roll < none) el.style.backgroundImage = DEFAULT_AVA;
+    else if (roll < none + (1 - none) * .35) el.style.backgroundImage = `url("${pickFace(r, 'o')}")`;
+    else el.style.backgroundImage = `url("${pickFace(r, guessGender(nick) || (r() * 100 < (S.fem == null ? 50 : S.fem) ? 'f' : 'm'))}")`;
     return el;
   }
 
@@ -1481,7 +1732,8 @@ const ANSHLAG_FACES = {
 
   const history = [];
   function addLine(kind, nick, text, x) {
-    if (kind !== 'join') {
+    if ((kind === 'msg' || kind === 'msg hate' || kind === 'raid') && nick !== S.host && !(x && x.raw)) text = genderize(text, guessGender(nick));
+    if (kind !== 'join' && kind !== 'follow') {
       stats.comments++;
       recentChat.push(kind === 'host' ? '[streamer] ' + text : text);
       if (recentChat.length > 12) recentChat.shift();
@@ -1494,6 +1746,7 @@ const ANSHLAG_FACES = {
   function renderLine(rec) {
     const P = S.platform;
     if (rec.kind === 'join' && P !== 'ig') return;
+    if (rec.kind === 'follow' && P !== 'tt') return;
     const li = mk('li', 'line ' + rec.kind);
     li._rec = rec;
     if (P === 'yt') lineYT(li, rec); else if (P === 'tw') lineTW(li, rec); else if (P === 'tt') lineTT(li, rec); else lineIG(li, rec);
@@ -1509,6 +1762,7 @@ const ANSHLAG_FACES = {
   }
   function lineTT(li, { kind, nick, text }) {
     if (kind === 'join') { li.append(mk('div', 'msg', `${nick} ${L().join} 👋`)); return; }
+    if (kind === 'follow') { li.classList.add('join'); li.append(mk('div', 'msg', `${nick} ${L().followEv} ➕`)); return; }
     li.appendChild(kind === 'host' ? hostAvaEl() : avatar(nick));
     const m = mk('div', 'msg');
     m.append(mk('span', 'nick', nick));
@@ -1565,7 +1819,8 @@ const ANSHLAG_FACES = {
     return h ? `${h}:${p(m)}:${p(sec)}` : `${p(m)}:${p(sec)}`;
   }
 
-  let boost = 1;
+  let boost = 1, followGain = 0, followFrac = 0, lastFollowEv = 0;
+  const followersNow = () => Math.max(0, Math.round(S.followers || 0) + followGain);
   const MILESTONES = [1000, 5000, 10000, 25000, 50000, 100000, 250000, 500000, 1000000];
   const passed = new Set();
   function checkMilestones(n) {
@@ -1590,6 +1845,34 @@ const ANSHLAG_FACES = {
     }
     burst(10);
   }
+  function gainFollowers(n, loud, nick) {
+    followGain += n;
+    if (S.platform === 'yt') $('#hostSub').textContent = L().subs(followersNow());
+    const nowT = Date.now();
+    if (loud || nowT - lastFollowEv > rnd(7000, 16000)) { lastFollowEv = nowT; followEvent(nick); }
+  }
+  function followEvent(nick) {
+    if (!live) return;
+    nick = nick || makeNick();
+    if (S.platform === 'tt') addLine('follow', nick);
+    else if (S.platform === 'tw' && chance(.45)) addLine('msg', pick(['StreamElements', 'Nightbot']), L().twFollow(nick), { raw: true });
+  }
+  function followWave() {
+    const n = Math.max(3, Math.round(Math.min(400, viewers * rnd(.002, .006)) + ri(3, 12)));
+    followGain += n;
+    if (S.platform === 'yt') $('#hostSub').textContent = L().subs(followersNow());
+    let at = rnd(300, 700);
+    for (let i = 0, m = Math.min(n, ri(4, 7)); i < m; i++) {
+      at += rnd(300, 900);
+      setTimeout(() => {
+        if (!live) return;
+        const nick = makeNick();
+        followEvent(nick);
+        if (S.platform !== 'tt' || chance(.4)) addLine('msg', nick, humanize(pickFresh(AUD_T[S.lang === 'en' ? 'en' : 'ru'].follow)));
+      }, at);
+    }
+    lastFollowEv = Date.now() + 8000;
+  }
   function tickViewers() {
     boost = 1 + (boost - 1) * .985;
     const tgt = S.target * boost;
@@ -1597,6 +1880,8 @@ const ANSHLAG_FACES = {
     const goal = tgt * (1 + wob);
     const k = Math.abs(goal - viewers) > tgt * .1 ? rnd(.05, .12) : .22;
     viewers = Math.max(0, viewers + (goal - viewers) * k);
+    followFrac += viewers * 3.9e-6 * (boost > 1.05 ? 1.8 : 1);
+    if (followFrac >= 1) { const n = Math.floor(followFrac); followFrac -= n; gainFollowers(n); }
     const shown = Math.round(viewers);
     peak = Math.max(peak, shown);
     checkMilestones(shown);
@@ -1616,11 +1901,14 @@ const ANSHLAG_FACES = {
     if (AI.queue.length && chance(.85)) { addLine('msg', makeNick(), AI.queue.shift()); return; }
     if ((S.platform === 'ig' || S.platform === 'tt') && chance(.07)) { addLine('join', makeNick()); return; }
     if (S.platform === 'tw' && chance(.035)) { addLine('sub', makeNick(), L().subEv(ri(1, 24))); return; }
-    const t = L(), custom = customList();
+    if (chance(FOREIGN_P[S.foreign] || 0)) { foreignComment(); return; }
+    if (chance(.012)) { const n = makeNick(); addLine('msg', n, humanize(pickFresh(AUD_T[S.lang === 'en' ? 'en' : 'ru'].follow))); gainFollowers(1, true, n); return; }
+    const t = L(), custom = customList(), hp = (S.haters || 0) / 100;
     if (custom.length && chance({ rare: .06, mid: .15, often: .32 }[S.customRate] || .15)) { addLine('msg', makeNick(), pickFresh(custom)); return; }
     let pool;
     if (S.mode === 'hater' && chance(.42)) pool = t.hate;
     else if (S.mode === 'hater' && chance(.14)) pool = t.defend;
+    else if (hp && chance(hp)) pool = t.hate;
     else if (S.mode === 'hype' && chance(.45)) pool = t.hype;
     else if (S.mode === 'support' && chance(.4)) pool = t.support;
     else if (S.mode === 'funny' && chance(.4)) pool = t.funny;
@@ -1633,9 +1921,11 @@ const ANSHLAG_FACES = {
     }
     if (S.platform === 'tw' && pool !== t.hate && chance(.32)) pool = t.tw;
     if (S.platform === 'tt' && pool !== t.hate && chance(.25)) pool = t.tt;
+    if ((S.age === 'teen' || S.age === 'adult') && pool !== t.hate && chance(.14)) pool = AUD_T[S.lang === 'en' ? 'en' : 'ru'][S.age];
     const everyday = pool === t.greet || pool === t.praise || pool === t.chat || pool === t.emoji || pool === t.react || pool === t.hostNamed;
     const raw = (everyday && chance(.38) ? genLine() : pickFresh(pool)).replace(/\{host\}/g, S.host);
     addLine(pool === t.hate ? 'msg hate' : 'msg', makeNick(), pool === t.tw || pool === t.hype ? raw : humanize(raw));
+    if (pool === t.hate && S.mode !== 'hater' && chance(.3)) setTimeout(() => { if (live) addLine('msg', makeNick(), humanize(pickFresh(L().defend))); }, rnd(1500, 4000));
   }
 
   /* answering the host */
@@ -1655,7 +1945,7 @@ const ANSHLAG_FACES = {
       setTimeout(() => {
         if (!live) return;
         const t = L(), hater = S.mode === 'hater' && chance(.25);
-        addLine(hater ? 'msg hate' : 'msg', makeNick(), humanize(pickFresh(hater ? t.hate : t[k])));
+        addLine(hater ? 'msg hate' : 'msg', makeNick(), humanize(k === 'a_where' && !hater && userCities().length && chance(.75) ? cityAnswer() : pickFresh(hater ? t.hate : t[k])));
       }, at);
     }
   }
@@ -1757,10 +2047,152 @@ const ANSHLAG_FACES = {
       stage.appendChild(c);
     }
   }
-  function donate() {
-    const t = L(), nick = makeNick(), amt = pick(t.amounts);
-    const troll = S.mode === 'hater' && chance(.45);
-    const msg = !troll && chance(.15) ? '' : pick(troll ? t.don_hate : t.don_msg);
+  /* donation texts: short, ordinary, on topic — what is in the frame, the stream topic, the time, the goal, the city; no grand words */
+  const DON_TXT = {
+    ru: {
+      plain: ['на чай', 'на кофе ☕', 'держи на кофе', 'спасибо за эфир', 'без повода', 'просто так', 'хорошего вечера', 'спасибо, интересно', 'немного от меня', 'на развитие канала', 'в копилку', 'привет 👋', '❤️', '☕', '🙂', 'за компанию', 'спасибо, что сегодня в эфире', 'приятно смотреть', 'за атмосферу', 'за хорошее настроение', 'спасибо за вечер', 'это за уют', 'на вкусняшку', 'на шоколадку 🍫', 'спасибо, что читаешь чат', 'поддержу немного', 'продолжай', 'ещё бы часик', 'классно сидим', 'за спокойный эфир', 'за прошлый эфир тоже', 'чтобы эфиры были чаще', 'на свет для эфиров', 'на штатив', 'на новый микрофон', 'за честность', 'за разговоры', 'спасибо, отвлёкся от работы', 'хороший вечер получился', 'смотрю молча, но смотрю', 'на пиццу 🍕', 'на такси домой 😄', 'за то, что без лишнего пафоса', 'так держать', 'ну а чего бы и нет', 'настроение поднялось, держи'],
+      small: ['на жвачку', 'на пол-кофе 😅', 'чем богат', 'студент, извини', 'первый донат в жизни', 'на дошик 😅', 'маленький, но от души', 'на семечки', 'символически', 'немного, но приятно же', 'сколько не жалко', 'на спички 😄', 'копейка рубль бережёт'],
+      big: ['давно смотрю, спасибо за эфиры, правда поднимают настроение', 'спасибо за прошлый совет, помогло', 'получил зарплату, делюсь 🙂', 'это за все эфиры, что смотрел(а) молча', 'спасибо, что не бросаешь эфиры', 'с меня давно причиталось', 'за сегодняшний вечер, было классно', 'давно хотел(а) поддержать', 'отмечаю повышение, держи', 'это на технику, не на ерунду 😄', 'спасибо, что отвечаешь на вопросы, это редкость', 'неделя была тяжёлая, эфир помог', 'на развитие, хочу больше таких эфиров', 'спасибо за спокойствие в эфире, отдыхаю'],
+      again: ['ещё немного от меня', 'снова я 😄', 'опять я, держи', 'и ещё чуть-чуть', 'вторая часть 😄', 'не удержался', 'ну и ещё', 'добавлю'],
+      ask: ['вопрос: во сколько следующий эфир?', 'на чём снимаешь?', 'что за музыка сейчас?', 'посоветуй сериал на вечер', 'какие планы на выходные?', 'чем занимаешься кроме эфиров?', 'как давно ведёшь эфиры?', 'что посоветуешь новичку?', 'какая камера?', 'кофе или чай?', 'кошки или собаки?', 'как прошёл день?', 'любимый фильм?', 'что сегодня на ужин?', 'а где ты живёшь, если не секрет?', 'какую книгу сейчас читаешь?', 'куда хочешь в отпуск?', 'расскажи, с чего всё начиналось'],
+      req: ['сделай погромче', 'музыку чуть тише', 'передай привет {name}', 'передай привет {name}', 'прочитай мой коммент выше', 'сделай эфир завтра тоже', 'покажи вид из окна', 'расскажи историю какую-нибудь', 'включи что-нибудь весёлое', 'поздоровайся с моей сестрой, она тоже смотрит', 'ответь на вопрос в чате, пожалуйста', 'сделай как-нибудь эфир с ответами на вопросы', 'включи ту песню из прошлого эфира', 'скажи что-нибудь на английском 😄'],
+      names: ['маме', 'брату', 'сестре', 'бабушке', 'папе', 'Лене', 'Диме', 'Насте', 'Артёму', 'Маше', 'Кириллу', 'Алине', 'Егору', 'Даше', 'Мише', 'Вике', 'Никите', 'Соне', 'Илье', 'Лизе', 'коллегам', 'моему коту', 'соседке по комнате', 'всей нашей группе'],
+      city: [c => `привет из ${c.gen}`, c => `${c.nom} на связи 👋`, c => `из ${c.gen}, всем хорошего вечера`, c => `${c.nom} смотрит 👀`, c => `привет, я из ${c.gen}`, c => `из ${c.gen} с любовью`, c => `${c.nom} передаёт привет`],
+      topic: {
+        chat: ['за разговор', 'тема хорошая', 'интересно слушать', 'расскажи ещё что-нибудь', 'на чай, пока болтаем', 'за честные ответы'],
+        games: ['на новую мышку', 'за тот момент 😂', 'давай ещё катку', 'на донат в игре', 'не тильтуй', 'за клатч', 'возьми другого персонажа', 'на видеокарту, по чуть-чуть', 'сыграй на максимальной сложности', 'gg', 'на новые наушники для игры', 'за нервы в последнем раунде'],
+        beauty: ['на новую палетку', 'покажи ещё раз, как растушёвываешь', 'скажи название тона', 'хочу такой же образ', 'на кисточки', 'сделай потом вечерний образ', 'стрелки ровные, завидую', 'на хороший праймер', 'какая тушь?'],
+        food: ['на продукты', 'добавь чеснока', 'на следующий рецепт', 'сколько минут жарить?', 'покажи поближе, что получилось', 'это на специи', 'приготовь потом что-нибудь сладкое', 'скинь рецепт, пожалуйста', 'на хорошую сковородку', 'попробуй и скажи, как вышло'],
+        music: ['сыграй ещё раз первую', 'на струны', 'спой что-нибудь своё', 'на новые наушники', 'спой что-нибудь грустное', 'за голос', 'на медиатор 😄', 'давай что-нибудь из старого', 'на заказ: что-нибудь спокойное'],
+        sport: ['на протеин', 'сделай ещё подход за меня', 'на кроссовки', 'за мотивацию, завтра тоже пойду', 'покажи упражнение на спину', 'на воду 💧', 'на абонемент'],
+        travel: ['на билеты', 'покажи вид ещё раз', 'на сувенир', 'где это вообще?', 'на мороженое там', 'привези что-нибудь чату 😄', 'на экскурсию'],
+        study: ['на кофе для сессии', 'объясни ещё раз последнее', 'удачи на экзамене', 'на тетрадки 😄', 'давай ещё 25 минут', 'за то, что учимся вместе', 'на маркеры']
+      },
+      obj: {
+        food: [o => `на ещё ${agree(o.g, 'один такой', 'одну такую', 'одно такое', 'такие же')} ${o.a}`, o => `это за ${o.a} 😄`, o => `${cap(o.n)} ${agree(o.g, 'выглядит', 'выглядит', 'выглядит', 'выглядят')} вкусно, приятного`, () => 'приятного аппетита', () => 'на добавку', () => 'поделись рецептом', () => 'теперь я голодный', () => 'это на десерт', o => `где брать ${o.a}?`],
+        drink: [() => 'на следующую кружку', () => 'за здоровье 🥂', () => 'на чай с лимоном', () => 'чтобы было что налить', () => 'на кофе, раз уж пьёшь', o => `на ещё ${agree(o.g, 'один такой', 'одну такую', 'одно такое', 'такие же')} ${o.a}`],
+        cook: [() => 'на продукты', () => 'добавь соли 😄', () => 'на ужин', () => 'пахнет, наверное, на весь дом'],
+        pet: [o => `на корм 🐾 погладь ${agree(o.g, 'его', 'её', 'его', 'их')} за меня`, o => `покажи ${o.a} ещё раз`, o => `это ${agree(o.g, 'ему', 'ей', 'ему', 'им')} на вкусняшки`, () => 'как зовут?', () => 'привет хвостатому 🐾', () => 'на игрушку для питомца'],
+        thing: [o => `скинь ссылку на ${o.a}`, o => `сколько ${agree(o.g, 'стоит', 'стоит', 'стоит', 'стоят')} ${o.n}?`, o => `на ${agree(o.g, 'такой', 'такую', 'такое', 'такие')} же ${o.a}`, () => 'покажи поближе', o => `откуда ${o.n}?`],
+        tech: [o => `на ${agree(o.g, 'новый', 'новую', 'новое', 'новые')} ${o.a}`, () => 'какая модель?', () => 'на апгрейд', o => `${cap(o.n)} ${agree(o.g, 'хороший', 'хорошая', 'хорошее', 'хорошие')}, держи`],
+        wear: [() => 'тебе идёт', o => `где купить ${o.a}?`, () => 'на шопинг', () => 'стильно, держи', () => 'скинь бренд'],
+        music: [() => 'сыграй что-нибудь', () => 'на струны', () => 'давай песню', () => 'на заказ: что-нибудь спокойное'],
+        sport: [() => 'на протеин', () => 'ещё подход!', () => 'за мотивацию'],
+        vehicle: [() => 'на бензин ⛽', () => 'на мойку 😄', () => 'аккуратнее на дороге', () => 'какой расход?'],
+        place: [() => 'красиво там', () => 'покажи, что вокруг', () => 'на мороженое там', () => 'где это?']
+      },
+      scene: { dark: ['на лампу, а то темно 😄', 'на свет', 'включи свет, ничего не видно'], sunset: ['за этот закат', 'красиво у тебя там'], green: ['красиво там, держи на чай', 'за природу 🌿'], neon: ['за атмосферу', 'красивая подсветка'], warm: ['уютно у тебя', 'за уют'], sky: ['погода класс, держи'], shaky: ['на штатив 😄', 'на стабилизатор'], blurry: ['протри камеру 😄', 'на новую камеру'], newscene: ['где это ты сейчас?'], bright: ['на солнечные очки 😎'] },
+      people: ['привет тому, кто рядом', 'передай привет второму 😄', 'познакомь с гостем', 'это вам двоим', 'привет компании'],
+      time: { night: ['иди спать после эфира 😄', 'на кофе, ночь же', 'кто ещё не спит?', 'завтра рано вставать, но я тут'], morning: ['с утра пораньше, держи на кофе', 'доброе утро, на завтрак', 'хорошего дня'], day: ['на обед', 'смотрю в обед', 'хорошего дня'], evening: ['хорошего вечера', 'на ужин', 'вечер удался', 'спасибо за вечер'] },
+      long: ['за то, что так долго с нами', 'второй час смотрю, держи', 'чтобы хватило сил ещё на час'],
+      early: ['успел к началу 🙂', 'с самого начала тут', 'хорошее начало эфира'],
+      first: ['первый донат за эфир 😄', 'открываю донаты', 'начну, пожалуй'],
+      goal: [() => 'в сбор', () => 'в копилку на сбор', g => `на сбор: ${g}`, () => 'на цель эфира', () => 'немного в сбор'],
+      goalNear: ['добиваем сбор', 'осталось чуть-чуть', 'почти собрали'],
+      age: {
+        teen: ['с карманных 😅', 'на роблокс 😭', 'это всё, что было на карте', 'передай привет моему классу', 'сделай тренд', 'го коллаб 😭', 'на сникерс 😅'],
+        adult: ['Спасибо за эфир, всего доброго', 'Хорошего вечера', 'После работы самое то', 'Дети уснули, наконец смотрю', 'Спасибо, приятно смотреть', 'Удачи вам', 'Хорошая тема, спасибо']
+      },
+      hate: ['признай, что это постанова', 'на нормальный микрофон', 'на штатив, камера трясётся', 'на свет, ничего не видно', 'на новую тему 😴', 'плачу за минуту тишины 😂', 'на субтитры, ничего не слышно', 'на курсы ведения эфиров 😄', 'на то, чтобы камеру выключили 😂']
+    },
+    en: {
+      plain: ['for coffee ☕', 'coffee on me', 'thanks for the stream', 'no reason, just because', 'have a good night', 'a little something', 'for the vibes', 'thanks for hanging out', 'for the channel', 'keep it going', 'for the good mood', '❤️', '☕', '🙂', 'love the chill vibe today', 'thanks for reading chat', 'for a snack', 'stream more often pls', 'for better lighting 😄', 'for the mic fund', 'one more hour?', 'for the company tonight', 'this made my day a bit better', 'for pizza 🍕', 'cab money 😄', 'lurker here, thanks', 'good stream, no notes'],
+      small: ['for gum 😅', 'half a coffee', 'all I got lol', 'student budget', 'first donation ever', 'small but from the heart', 'every bit counts right', 'pocket change'],
+      big: ['been watching for a while, thanks for these streams', 'your advice last time actually helped', 'got paid today, sharing a bit 🙂', 'for all the streams I watched without saying anything', 'thanks for always answering questions', 'put it toward better gear', 'had a rough week, this helped', 'want more streams like this one'],
+      again: ['me again 😄', 'a bit more', 'round two', "couldn't resist", 'one more from me', 'adding a little'],
+      ask: ['what time is the next stream?', 'what camera do you use?', 'what song is this?', 'recommend a show for tonight?', 'plans for the weekend?', 'what do you do besides streaming?', 'how long have you been streaming?', 'any tips for new streamers?', 'coffee or tea?', 'cats or dogs?', 'how was your day?', 'favorite movie?', "what's for dinner?", 'what are you reading right now?', 'how did you get started?'],
+      req: ['turn the volume up a bit', 'music is a bit loud', 'say hi to {name}', 'say hi to {name}', 'read my comment above pls', 'stream tomorrow too?', 'show us the view outside', 'tell us a story', 'play something upbeat', "shout out my sister, she's watching too", 'do a Q&A sometime', 'play that song from last stream'],
+      names: ['my mom', 'my brother', 'my sister', 'my grandma', 'my dad', 'Emma', 'Jake', 'Liam', 'Mia', 'Ava', 'Noah', 'my roommate', 'my cat', 'my coworkers'],
+      city: [c => `hi from ${c.nom}`, c => `${c.nom} checking in 👋`, c => `greetings from ${c.nom}`, c => `watching from ${c.nom}`, c => `${c.nom} says hi`],
+      topic: {
+        chat: ['for the chat', 'great topic', 'love listening to you', 'tell us more', 'for the honest answers'],
+        games: ['for a new mouse', 'for that play 😂', 'one more round', "don't tilt", 'that clutch tho', 'try a different character', 'gg', 'play on hard mode', 'for a better headset'],
+        beauty: ['for a new palette', 'show the blending again', 'what shade is that?', 'want this exact look', 'for new brushes', 'do an evening look next', 'what mascara?'],
+        food: ['for groceries', 'add more garlic', 'for the next recipe', 'how long do you cook it?', 'show it up close', 'for spices', 'post the recipe pls', 'for a good pan'],
+        music: ['play the first one again', 'for new strings', 'sing one of yours', 'for new headphones', 'play something sad', 'for that voice', 'request: something calm'],
+        sport: ['for protein', 'one more set for me', 'for new sneakers', 'for the motivation, gym tomorrow', 'for water 💧', 'for the gym membership'],
+        travel: ['for the tickets', 'show the view again', 'for a souvenir', 'where is this?', 'get an ice cream there', 'for a tour'],
+        study: ['coffee for exam season', 'explain the last part again', 'good luck on your exam', 'another 25 minutes?', 'for studying together', 'for highlighters']
+      },
+      obj: {
+        food: [o => `for another ${o.n}`, o => `that ${o.n} looks good`, () => 'enjoy your meal', () => 'for seconds', () => 'share the recipe', () => "now I'm hungry", o => `where's the ${o.n} from?`],
+        drink: [() => 'for a refill', () => 'cheers 🥂', o => `for another ${o.n}`, () => 'tea with lemon on me'],
+        cook: [() => 'for groceries', () => 'add salt 😄', () => 'for dinner'],
+        pet: [o => `for ${o.n} treats 🐾`, o => `give the ${o.n} a pet for me`, () => "what's their name?", () => 'hi to the fluffy one 🐾', () => 'for a new toy for them'],
+        thing: [o => `where did you get the ${o.n}?`, o => `link the ${o.n}?`, o => `how much was the ${o.n}?`, () => 'show it closer'],
+        tech: [o => `for a new ${o.n}`, () => 'what model is that?', () => 'for an upgrade'],
+        wear: [() => 'looks good on you', o => `where's the ${o.n} from?`, () => 'for shopping', () => 'what brand?'],
+        music: [() => 'play something', () => 'for new strings', () => 'sing us one'],
+        sport: [() => 'for protein', () => 'one more set!', () => 'for the motivation'],
+        vehicle: [() => 'for gas ⛽', () => 'for a car wash 😄', () => 'drive safe'],
+        place: [() => 'looks beautiful there', () => 'show us around', () => 'get an ice cream there', () => 'where is this?']
+      },
+      scene: { dark: ["for a lamp, it's dark 😄", 'turn a light on'], sunset: ['for that sunset', 'beautiful out there'], green: ['nature looks nice, have a coffee', 'for the fresh air 🌿'], neon: ['for the vibes', 'love the lights'], warm: ['so cozy there', 'for the cozy vibe'], sky: ['nice weather, enjoy'], shaky: ['for a tripod 😄', 'for a gimbal'], blurry: ['wipe the camera 😄', 'for a new camera'], newscene: ['where are you now?'], bright: ['for sunglasses 😎'] },
+      people: ['hi to whoever is next to you', 'say hi to your friend', 'introduce your guest', 'this is for both of you'],
+      time: { night: ['go to sleep after this 😄', "coffee, it's late", 'who else is up?'], morning: ['early one, coffee on me', 'good morning, for breakfast', 'have a good day'], day: ['for lunch', 'watching on my lunch break'], evening: ['have a good evening', 'for dinner', 'nice evening'] },
+      long: ['for staying with us so long', 'second hour here, enjoy', 'for the energy to go one more hour'],
+      early: ['made it to the start 🙂', 'here from the very start', 'good start to the stream'],
+      first: ['first donation of the stream 😄', 'someone has to go first', "I'll start"],
+      goal: [() => 'for the goal', () => 'toward the goal', g => `for the ${g.toLowerCase()}`, () => 'adding to the goal'],
+      goalNear: ['almost there!', 'so close to the goal', "let's finish the goal"],
+      age: {
+        teen: ['from my allowance 😅', 'for robux 😭', 'all I had on my card', 'say hi to my class', 'do a trend'],
+        adult: ['Thanks for the stream, have a good one', 'Perfect after a long day at work', 'Kids are asleep, finally watching', 'Really enjoy these streams', 'Good luck with everything']
+      },
+      hate: ["admit it's staged", 'buy a better mic', 'turn the camera off pls 😂', 'for a tripod, the camera is shaking', 'for a better light', 'for a new topic 😴', 'paying for one minute of silence 😂', "for subtitles, can't hear you"]
+    }
+  };
+  const DON_AMT = {
+    ru: [[20, 30, 50, 50, 69, 77, 99, 100, 100, 100, 111, 150], [200, 200, 222, 250, 300, 300, 333, 350, 500, 500, 500, 777], [1000, 1000, 1000, 1500, 2000, 2000, 2500, 3000, 5000], [7777, 10000, 10000, 15000, 25000]],
+    en: [[1, 1, 2, 2, 3, 5, 5], [5, 7, 10, 10, 10, 15, 20], [25, 25, 30, 50, 50, 69, 100], [150, 200, 250, 500]]
+  };
+  const DON_W = { small: [.68, .27, .05, 0], normal: [.46, .38, .145, .015], big: [.2, .4, .33, .07] };
+  function donAmount() {
+    const w = DON_W[S.donSize] || DON_W.normal, tiers = DON_AMT[S.lang] || DON_AMT.ru;
+    let r = Math.random(), i = 0;
+    while (i < 3 && r >= w[i]) { r -= w[i]; i++; }
+    return pick(tiers[i]);
+  }
+  const dayPart = () => { const h = new Date().getHours(); return h < 5 || h >= 23 ? 'night' : h < 12 ? 'morning' : h < 17 ? 'day' : 'evening'; };
+  function donMessage(amt, repeat) {
+    const en = S.lang === 'en', D = DON_TXT[en ? 'en' : 'ru'], st = L().scSteps;
+    if (chance(.12)) return '';
+    const tier = amt < st[0] ? 0 : amt >= st[3] ? 2 : 1, opts = [];
+    const add = (w, f) => opts.push([w, f]);
+    add(3, () => pickFresh(D.plain));
+    if (tier === 0) add(2, () => pickFresh(D.small));
+    if (tier === 2) add(2.2, () => pickFresh(D.big));
+    if (repeat) add(4, () => pickFresh(D.again));
+    add(1.6, () => pickFresh(D.ask));
+    add(1.1, () => pickFresh(D.req).replace('{name}', pick(D.names)));
+    add(userCities().length ? 1.8 : .8, () => pick(D.city)(cityPick()));
+    if (D.topic[S.topic]) add(S.topic === 'chat' ? .8 : 2.4, () => pickFresh(D.topic[S.topic]));
+    if (detectedObjs.length) add(2.8, () => {
+      const e = pick(detectedObjs), o = en ? { n: e[4], a: e[4], g: 'm' } : { n: e[0], a: e[1], g: e[2] };
+      return pick(D.obj[e[3]] || D.obj.thing)(o);
+    });
+    sceneTags.forEach(tg => { if (D.scene[tg]) add(1.2, () => pickFresh(D.scene[tg])); });
+    if (peopleNow >= 2 || guest) add(1.4, () => pickFresh(D.people));
+    add(.9, () => pickFresh(D.time[dayPart()]));
+    const el = elapsed();
+    if (el > 2700) add(1.3, () => pickFresh(D.long)); else if (el < 150) add(1, () => pickFresh(D.early));
+    if (!donors.size) add(1.2, () => pick(D.first));
+    if (S.goal && !goalDone) add(raised / Math.max(1, S.goalSum) > .75 ? 2.2 : 1.4, () => raised / Math.max(1, S.goalSum) > .75 && chance(.6) ? pick(D.goalNear) : pick(D.goal)(S.goalTitle || DEF.goalTitle));
+    if (D.age[S.age]) add(1.2, () => pickFresh(D.age[S.age]));
+    let r = Math.random() * opts.reduce((a, o) => a + o[0], 0), f = opts[0][1];
+    for (const [w, fn] of opts) { r -= w; if (r <= 0) { f = fn; break; } }
+    let msg = String(f() || '');
+    if (S.age === 'adult' || (S.age !== 'teen' && chance(.22))) msg = cap(msg);
+    if (S.age === 'teen' && chance(.6)) msg = msg.toLowerCase();
+    return msg;
+  }
+  function donate(o) {
+    o = o || {};
+    const t = L(), repeatOld = !o.nick && donors.size > 0 && chance(.14);
+    const nick = o.nick || (repeatOld ? pick([...donors.keys()]) : makeNick());
+    const amt = o.amt > 0 ? o.amt : donAmount(), wasDonor = donors.has(nick);
+    const troll = !o.msg && (S.mode === 'hater' ? chance(.45) : chance((S.haters || 0) / 250));
+    const msg = o.msg ? o.msg : genderize(troll ? pickFresh(DON_TXT[S.lang === 'en' ? 'en' : 'ru'].hate) : donMessage(amt, wasDonor), guessGender(nick));
     stats.don[S.lang] = (stats.don[S.lang] || 0) + amt;
     donors.set(nick, (donors.get(nick) || 0) + amt);
     const st = t.scSteps, tier = amt >= st[4] ? 3 : amt >= st[2] ? 2 : amt >= st[0] ? 1 : 0;
@@ -1782,6 +2214,14 @@ const ANSHLAG_FACES = {
     setTimeout(() => speakDonation(nick, amt, msg), 700);
     burst(6);
     addToGoal(amt);
+  }
+  /* TikTok has gifts instead of donations: coins pick the gift, a text arrives as a comment from the same viewer */
+  function giftFrom(nick, coins, text) {
+    let gi = null, n = null;
+    if (coins > 0) { gi = 0; GIFTS.forEach((g, i) => { if (g.c <= coins) gi = i; }); n = Math.max(1, Math.min(99, Math.round(coins / GIFTS[gi].c))); }
+    nick = nick || makeNick();
+    sendGift(nick, gi, n);
+    if (text) setTimeout(() => { if (live) addLine('msg', nick, text, { raw: true }); }, 900);
   }
 
   /* TikTok-style gifts with combo counters, likes and top fans */
@@ -1942,7 +2382,7 @@ const ANSHLAG_FACES = {
     ];
     every('comment', botComment, () => Math.min(6000, Math.max(110, expMs(commentRate()))));
     every('heart', spawnHeart, () => Math.min(4000, Math.max(90, expMs(heartRate()))));
-    every('don', () => { if (S.donations) (S.platform === 'tt' ? sendGift() : donate()); }, () => rnd(18000, 52000) / (viewers > 20000 ? 1.6 : viewers > 2000 ? 1.2 : .8) / (S.platform === 'tt' ? 3 : 1));
+    every('don', () => { if (S.donations) (S.platform === 'tt' ? sendGift() : donate()); }, () => rnd(18000, 52000) / (viewers > 20000 ? 1.6 : viewers > 2000 ? 1.2 : .8) / (S.platform === 'tt' ? 3 : 1) / ({ rare: .45, often: 2.3 }[S.donRate] || 1));
     every('raid', () => { if (chance(.55)) raid(); }, () => rnd(200000, 420000));
     every('ai', aiAmbient, () => (S.provider === 'openrouter' ? 60000 : 22000) * rnd(.85, 1.15));
   }
@@ -2183,6 +2623,7 @@ const ANSHLAG_FACES = {
       'Stream:',
       `- Streamer nickname: ${S.host}`,
       `- Viewers online: about ${Math.round(viewers)}`,
+      audienceLine(),
       `- Chat language: ${lang}. If the streamer's latest lines are clearly in another language, write in that language instead.`,
       `- Mode: ${S.mode === 'hater' ? 'HATER. About 40% of comments are mild trolling of the stream itself (boring, staged, bad sound, nothing happening, and in the frame: overpriced, ugly place, looks bland). A few viewers defend the streamer.' : ({ hype: 'HYPE. A screaming, overexcited audience: caps, fire emoji, "LEGEND", "ICON".', support: 'SUPPORTIVE. Warm, kind, encouraging messages.', funny: 'FUNNY. Everyone is laughing, joking and making memes.' })[S.mode] || 'Normal. A friendly, excited audience.'}`,
       `- Stream topic: ${({ chat: 'just chatting', games: 'gaming', beauty: 'makeup and beauty', food: 'cooking', music: 'music and singing', sport: 'sport and workouts', travel: 'travel', study: 'studying together' })[S.topic] || 'just chatting'}`,
@@ -2460,7 +2901,7 @@ const ANSHLAG_FACES = {
   function applyInfo() {
     const t = L(), title = S.title || DEF.title;
     $('#streamTitle').textContent = title;
-    $('#hostSub').textContent = S.platform === 'tw' ? title : S.platform === 'tt' ? `${t.compact(Math.round(likes))} ${t.likesWord}` : t.subs(Math.round(S.target * 14.3));
+    $('#hostSub').textContent = S.platform === 'tw' ? title : S.platform === 'tt' ? `${t.compact(Math.round(likes))} ${t.likesWord}` : t.subs(followersNow());
     $('#ttPop').textContent = t.popChip;
     $('#hostCat').textContent = t.category;
   }
@@ -2582,21 +3023,137 @@ const ANSHLAG_FACES = {
   }
   const countEl = document.querySelector('.live-count');
   let drag = null;
-  countEl.addEventListener('pointerdown', e => { drag = { y: e.clientY, acc: 0, moved: false }; try { countEl.setPointerCapture(e.pointerId); } catch (err) {} });
+  countEl.addEventListener('pointerdown', e => { const d = drag = { y: e.clientY, acc: 0, moved: false, secret: false }; d.hold = setTimeout(() => { if (!d.moved && drag === d) { d.secret = true; buzz(); openSecret(); } }, 650); try { countEl.setPointerCapture(e.pointerId); } catch (err) {} });
   countEl.addEventListener('pointermove', e => {
     if (!drag) return;
     drag.acc += e.clientY - drag.y; drag.y = e.clientY;
-    while (Math.abs(drag.acc) >= 14) { const up = drag.acc < 0; drag.acc += up ? 14 : -14; drag.moved = true; setTarget(S.target * (up ? 1.1 : .9)); }
+    while (Math.abs(drag.acc) >= 14) { const up = drag.acc < 0; drag.acc += up ? 14 : -14; drag.moved = true; clearTimeout(drag.hold); setTarget(S.target * (up ? 1.1 : .9)); }
   });
-  countEl.addEventListener('pointerup', () => { if (drag && !drag.moved && live) openPeople(); drag = null; });
-  countEl.addEventListener('pointercancel', () => { drag = null; });
+  countEl.addEventListener('pointerup', () => { if (drag) clearTimeout(drag.hold); if (drag && !drag.moved && !drag.secret && live) openPeople(); drag = null; });
+  countEl.addEventListener('pointercancel', () => { if (drag) clearTimeout(drag.hold); drag = null; });
+  countEl.addEventListener('contextmenu', e => e.preventDefault());
   document.addEventListener('keydown', e => {
     if (!live || e.target.closest('input, textarea, select, .more-menu, .line-menu, .sheet')) return;
     if (e.key === 'ArrowUp') { e.preventDefault(); setTarget(S.target * 1.1); }
     else if (e.key === 'ArrowDown') { e.preventDefault(); setTarget(S.target * .9); }
   });
-  $('#raidBtn').addEventListener('click', () => raid());
-  $('#donNowBtn').addEventListener('click', () => { ensureAudio(); S.platform === 'tt' ? sendGift() : donate(); });
+  /* hidden control panel: hold the viewer counter, the LIVE badge or the "…" button (or press ` on a keyboard) */
+  const buzz = () => { try { navigator.vibrate && navigator.vibrate(12); } catch (e) {} };
+  function longPress(el, ms, fn) {
+    let tm = 0, sx = 0, sy = 0, fired = false;
+    const stop = () => { clearTimeout(tm); tm = 0; };
+    el.addEventListener('pointerdown', e => {
+      fired = false; sx = e.clientX; sy = e.clientY; stop();
+      try { el.setPointerCapture(e.pointerId); } catch (err) {}
+      tm = setTimeout(() => { tm = 0; fired = true; buzz(); fn(); }, ms);
+    });
+    el.addEventListener('pointermove', e => { if (tm && Math.hypot(e.clientX - sx, e.clientY - sy) > 12) stop(); });
+    ['pointerup', 'pointercancel', 'pointerleave'].forEach(k => el.addEventListener(k, stop));
+    el.addEventListener('contextmenu', e => e.preventDefault());
+    el.addEventListener('click', e => { if (fired) { fired = false; e.preventDefault(); e.stopImmediatePropagation(); } }, true);
+  }
+  const secretSheet = $('#secretSheet');
+  function openSecret() {
+    closeMenu(false);
+    syncSecret();
+    openSheet(secretSheet);
+  }
+  function syncSecret() {
+    const tt = S.platform === 'tt';
+    $('#scNow').textContent = Math.round(viewers).toLocaleString('ru-RU');
+    $('#scDonLabel').textContent = tt ? 'Подарок' : 'Донат';
+    $('#scDonGo').textContent = tt ? 'Прислать подарок' : 'Прислать донат';
+    $('#scDonAmt').placeholder = tt ? 'Монеты (пусто — случайный подарок)' : `Сумма, ${L().cur} (пусто — случайная)`;
+    renderQueue();
+  }
+  document.addEventListener('keydown', e => {
+    if ((e.key === '`' || e.key === 'ё' || e.key === 'Ё') && !e.target.closest('input, textarea, select')) { e.preventDefault(); openSecret(); }
+  });
+  const whenOf = name => { const el = document.querySelector(`input[name="${name}"]:checked`); return el ? +el.value || 0 : 0; };
+  const needLive = () => { if (live) return true; toast('Сначала начни эфир', 1600); return false; };
+
+  /* things planned for later: they fire on time even with the panel closed */
+  const planned = [];
+  function plan(sec, label, fn) {
+    const p = { at: Date.now() + sec * 1000, label, tEl: null };
+    p.tm = setTimeout(() => { const i = planned.indexOf(p); if (i >= 0) planned.splice(i, 1); renderQueue(); if (live) fn(); }, sec * 1000);
+    planned.push(p);
+    renderQueue();
+  }
+  function cancelPlanned() { planned.forEach(p => clearTimeout(p.tm)); planned.length = 0; renderQueue(); }
+  const leftOf = p => fmtTime(Math.max(0, (p.at - Date.now()) / 1000));
+  function renderQueue() {
+    const box = $('#scQueue');
+    box.textContent = '';
+    planned.sort((a, b) => a.at - b.at).forEach(p => {
+      const li = mk('li', 'pq'), x = mk('button', 'pq-x', '✕');
+      p.tEl = mk('span', 'pq-t', leftOf(p));
+      li.append(p.tEl, mk('span', 'pq-b', p.label));
+      x.type = 'button'; x.setAttribute('aria-label', 'Отменить: ' + p.label);
+      x.addEventListener('click', () => { clearTimeout(p.tm); const i = planned.indexOf(p); if (i >= 0) planned.splice(i, 1); renderQueue(); });
+      li.append(x); box.append(li);
+    });
+    $('#scQueueEmpty').hidden = planned.length > 0;
+  }
+  setInterval(() => {
+    if (secretSheet.hidden) return;
+    $('#scNow').textContent = Math.round(viewers).toLocaleString('ru-RU');
+    planned.forEach(p => { if (p.tEl) p.tEl.textContent = leftOf(p); });
+  }, 1000);
+
+  /* viewers */
+  function putTarget(v) {
+    S.target = Math.max(1, Math.min(vMax, Math.round(v)));
+    range.value = toPos(S.target); vOut.textContent = S.target.toLocaleString('ru-RU');
+    save(); applyInfo(); syncFollowersHint();
+  }
+  $('#scViewersGo').addEventListener('click', () => {
+    const inp = $('#scViewers'), v = Math.round(+inp.value);
+    if (!(v >= 1)) { inp.focus(); return; }
+    boost = 1; putTarget(v);
+    inp.value = ''; inp.placeholder = 'Поставлено: ' + S.target.toLocaleString('ru-RU');
+  });
+  $('#scRaid').addEventListener('click', () => { if (!needLive()) return; closeSheet(); setTimeout(() => raid(), 400); });
+  $('#scDrop').addEventListener('click', () => { if (!needLive()) return; boost = Math.min(boost, 1); putTarget(nice(S.target * rnd(.55, .75))); });
+
+  /* a donation (or a TikTok gift) from a chosen nick, with a chosen sum and text, now or later */
+  $('#scDonGo').addEventListener('click', () => {
+    ensureAudio();
+    if (!needLive()) return;
+    const nick = $('#scDonNick').value.trim().replace(/^@/, ''), amt = Math.round(+$('#scDonAmt').value) || 0, text = $('#scDonText').value.trim();
+    const sec = whenOf('scDonWhen'), tt = S.platform === 'tt';
+    const go = () => (tt ? giftFrom(nick, amt, text) : donate({ nick, amt, msg: text }));
+    const label = [tt ? 'Подарок' : 'Донат', amt ? (tt ? amt + ' монет' : L().money(amt)) : '', nick ? 'от ' + nick : '', text ? '«' + text + '»' : ''].filter(Boolean).join(' ');
+    $('#scDonText').value = '';
+    if (sec) plan(sec, label, go); else { closeSheet(); setTimeout(go, 350); }
+  });
+
+  /* a comment from a viewer: a question to answer on air, a request, a joke */
+  $('#scComGo').addEventListener('click', () => {
+    if (!needLive()) return;
+    const inp = $('#scComText'), text = inp.value.trim();
+    if (!text) { inp.focus(); return; }
+    const nick = $('#scComNick').value.trim().replace(/^@/, '') || makeNick(), sec = whenOf('scComWhen');
+    const go = () => {
+      addLine('msg', nick, text, { raw: true });
+      if (/\?\s*$/.test(text) && chance(.7)) setTimeout(() => crowd('r_q', ri(1, 3)), rnd(900, 2000));
+    };
+    inp.value = '';
+    if (sec) plan(sec, `${nick}: ${text}`, go); else { closeSheet(); setTimeout(go, 500); }
+  });
+
+  /* waves: several viewers at once */
+  $('#waveGrid').addEventListener('click', e => {
+    const b = e.target.closest('[data-wave]');
+    if (!b || !needLive()) return;
+    const w = b.dataset.wave, t = L();
+    closeSheet();
+    setTimeout(() => {
+      if (w === 'follow') followWave();
+      else if (w === 'hate') { crowdPool(t.hate, ri(4, 6)); if (S.mode !== 'hater') setTimeout(() => { if (live) crowdPool(t.defend, ri(2, 3)); }, 4500); }
+      else crowdPool(t[w], ri(4, 7), w === 'hype');
+    }, 300);
+  });
 
   /* comment actions: reply, pin, delete, ban */
   const lineMenu = $('#lineMenu');
@@ -2607,7 +3164,7 @@ const ANSHLAG_FACES = {
   }
   chatEl.addEventListener('click', e => {
     const li = e.target.closest('.line');
-    if (!li || !li._rec || li._rec.kind === 'join' || !live) return;
+    if (!li || !li._rec || li._rec.kind === 'join' || li._rec.kind === 'follow' || !live) return;
     closeLineMenu();
     lmRec = li._rec;
     $('#lmHead').textContent = `${lmRec.nick}: ${lmRec.text || ''}`;
@@ -2789,7 +3346,7 @@ const ANSHLAG_FACES = {
   let lastTap = { t: 0, z: '' };
   stage.addEventListener('pointerdown', e => {
     ensureAudio();
-    if (e.target.closest('button, input, textarea, label, form, .sheet, .ended, .demo-pill, .alert, .scrim, .guest, .qcard, .line, .pinned, .live-count, .line-menu, .countdown')) return;
+    if (e.target.closest('button, input, textarea, label, form, .sheet, .ended, .demo-pill, .alert, .scrim, .guest, .qcard, .line, .pinned, .live-count, .live-badge, .line-menu, .countdown')) return;
     burst(3);
     addLikes(ri(1, 3));
     if (!S.secretTaps || !live) return;
@@ -2821,6 +3378,8 @@ const ANSHLAG_FACES = {
     moreBtn.setAttribute('aria-expanded', 'false');
     if (refocus) moreBtn.focus({ preventScroll: true });
   }
+  longPress(moreBtn, 700, openSecret);
+  longPress($('#liveLabel'), 650, openSecret);
   moreBtn.addEventListener('click', () => { if (moreMenu.hidden) openMenu(); else closeMenu(true); });
   moreMenu.addEventListener('click', e => { if (e.target.closest('.menu-item')) closeMenu(false); });
   moreMenu.addEventListener('keydown', e => {
@@ -2838,7 +3397,7 @@ const ANSHLAG_FACES = {
   }, true);
 
   /* settings sheet */
-  const panels = () => [sheet, $('#peopleSheet'), $('#qSheet'), $('#giftSheet')];
+  const panels = () => [sheet, $('#peopleSheet'), $('#qSheet'), $('#giftSheet'), $('#secretSheet')];
   $('#giftBtn').addEventListener('click', openGifts);
   function openSheet(which) {
     which = which || sheet;
@@ -2870,7 +3429,7 @@ const ANSHLAG_FACES = {
   const range = $('#setViewers'), vOut = $('#viewersOut');
   range.value = toPos(S.target);
   vOut.textContent = S.target.toLocaleString('ru-RU');
-  range.addEventListener('input', () => { S.target = toVal(+range.value); vOut.textContent = S.target.toLocaleString('ru-RU'); save(); applyInfo(); });
+  range.addEventListener('input', () => { S.target = toVal(+range.value); vOut.textContent = S.target.toLocaleString('ru-RU'); save(); applyInfo(); syncFollowersHint(); });
 
   function bindSeg(name, key) {
     document.querySelectorAll(`input[name="${name}"]`).forEach(inp => {
@@ -2887,6 +3446,50 @@ const ANSHLAG_FACES = {
   setCustom.addEventListener('input', () => { S.custom = setCustom.value; save(); });
   setRegulars.addEventListener('input', () => { S.regulars = setRegulars.value; save(); });
   bindSeg('lang', 'lang');
+  /* audience and followers */
+  bindSeg('age', 'age');
+  bindSeg('foreign', 'foreign');
+  bindSeg('donRate', 'donRate');
+  bindSeg('donSize', 'donSize');
+  const setFollowers = $('#setFollowers');
+  function syncFollowersHint() {
+    const n = Math.round(S.followers || 0);
+    let h = `Покажется как «${L().subs(n)}». На YouTube видно под ником, в TikTok зрители подписываются прямо в чате, а в итогах эфира видно, сколько пришло новых.`;
+    if (n > 0 && S.target > n * .3) h += ' Зрителей многовато для такого числа подписчиков: обычно в эфире от 1 до 5% от них.';
+    $('#followersHint').textContent = h;
+  }
+  function syncFollowers() { setFollowers.value = String(Math.round(S.followers || 0)); syncFollowersHint(); }
+  syncFollowers();
+  setFollowers.addEventListener('input', () => {
+    const v = Math.round(+setFollowers.value);
+    if (!(v >= 0) || setFollowers.value === '') return;
+    S.followers = Math.min(999000000, v); save(); applyInfo(); syncFollowersHint();
+  });
+  $('#fitViewers').addEventListener('click', () => {
+    const n = Math.round(S.followers || 0);
+    if (n < 1) { setFollowers.focus(); return; }
+    S.target = Math.max(vMin, Math.min(vMax, nice(n * rnd(.015, .04))));
+    range.value = toPos(S.target); vOut.textContent = S.target.toLocaleString('ru-RU');
+    save(); applyInfo(); syncFollowersHint();
+    toast('Зрители: ' + S.target.toLocaleString('ru-RU'), 1200);
+  });
+  const femText = v => v === 50 ? 'поровну' : v > 50 ? `${v}% девушек` : `${100 - v}% парней`;
+  const setFem = $('#setFem'), femOut = $('#femOut');
+  setFem.value = String(S.fem == null ? 50 : S.fem); femOut.textContent = femText(+setFem.value);
+  setFem.addEventListener('input', () => { S.fem = +setFem.value; femOut.textContent = femText(S.fem); save(); });
+  const setHaters = $('#setHaters'), hatersOut = $('#hatersOut');
+  const hatersText = v => (v ? v + '%' : 'нет');
+  setHaters.value = String(S.haters || 0); hatersOut.textContent = hatersText(+setHaters.value);
+  setHaters.addEventListener('input', () => { S.haters = +setHaters.value; hatersOut.textContent = hatersText(S.haters); save(); });
+  const setNoAva = $('#setNoAva'), noAvaOut = $('#noAvaOut');
+  setNoAva.value = String(S.noAva == null ? 15 : S.noAva); noAvaOut.textContent = setNoAva.value + '%';
+  setNoAva.addEventListener('input', () => { S.noAva = +setNoAva.value; noAvaOut.textContent = S.noAva + '%'; save(); });
+  const setCities = $('#setCities');
+  setCities.value = S.cities || '';
+  setCities.addEventListener('input', () => { S.cities = setCities.value; save(); });
+  const setFollowKeep = $('#setFollowKeep');
+  setFollowKeep.checked = !!S.followKeep;
+  setFollowKeep.addEventListener('change', () => { S.followKeep = setFollowKeep.checked; save(); });
   document.querySelectorAll('input[name="platform"]').forEach(inp => {
     inp.checked = inp.value === S.platform;
     inp.addEventListener('change', () => { if (inp.checked) { S.platform = inp.value; save(); applyPlatform(true); } });
@@ -2907,7 +3510,7 @@ const ANSHLAG_FACES = {
 
   const setObjects = $('#setObjects');
   setObjects.checked = !!S.objects;
-  setObjects.addEventListener('change', () => { S.objects = setObjects.checked; save(); if (!S.objects) detectedNow = []; });
+  setObjects.addEventListener('change', () => { S.objects = setObjects.checked; save(); if (!S.objects) { detectedNow = []; detectedObjs = []; } });
   const setCountdown = $('#setCountdown');
   setCountdown.checked = !!S.countdown;
   setCountdown.addEventListener('change', () => { S.countdown = setCountdown.checked; save(); });
@@ -2922,7 +3525,6 @@ const ANSHLAG_FACES = {
   setDon.checked = !!S.donations; setSound.checked = !!S.sound;
   setDon.addEventListener('change', () => { S.donations = setDon.checked; save(); });
   setSound.addEventListener('change', () => { S.sound = setSound.checked; save(); if (S.sound) ensureAudio(); });
-  $('#testDon').addEventListener('click', () => { ensureAudio(); closeSheet(); setTimeout(() => (S.platform === 'tt' ? sendGift() : donate()), 250); });
 
   /* AI settings */
   document.querySelectorAll('input[name="ai"]').forEach(inp => {
@@ -3194,7 +3796,7 @@ const ANSHLAG_FACES = {
     }
   };
   const det = { state: 'idle', coco: null, mnet: null, busy: false };
-  let detectedNow = [], objStable = new Map(), lastObjReact = 0;
+  let detectedNow = [], detectedObjs = [], objStable = new Map(), lastObjReact = 0;
   const objSeen = new Map();
   const loadScript = src => new Promise((res, rej) => {
     const el = document.createElement('script');
@@ -3239,7 +3841,7 @@ const ANSHLAG_FACES = {
   /* look of the frame from its pixels: light, colour, sky, greenery, sharpness, motion */
   const anaCanvas = document.createElement('canvas');
   anaCanvas.width = anaCanvas.height = 64;
-  let prevAna = null, calmTicks = 0, shakyTicks = 0, lastAtm = 0, sceneNow = [], camHello = false;
+  let prevAna = null, calmTicks = 0, shakyTicks = 0, lastAtm = 0, sceneNow = [], sceneTags = [], camHello = false;
   const tagTicks = new Map(), tagSeen = new Map();
   function analyzeFrame(el) {
     const N = 64, g = anaCanvas.getContext('2d', { willReadFrequently: true });
@@ -3288,6 +3890,7 @@ const ANSHLAG_FACES = {
     }
     const words = { dark: 'dark', bright: 'bright', neon: 'neon lights', warm: 'warm light', cool: 'cold light', green: 'greenery', sunset: 'sunset sky', sky: 'blue sky', colorful: 'very colorful', blurry: 'blurry', shaky: 'shaky camera', newscene: 'new place' };
     sceneNow = tags.map(t => words[t]).filter(Boolean);
+    sceneTags = tags.slice();
     const nowT = Date.now(), present = new Set(tags);
     for (const k of [...tagTicks.keys()]) if (!present.has(k)) tagTicks.delete(k);
     if (S.ai === 'key' && canSee()) return;
@@ -3320,7 +3923,7 @@ const ANSHLAG_FACES = {
   async function detectTick() {
     if (!live || !S.objects || inViewer || camOff) return;
     const src = frameSource();
-    if (!src) { detectedNow = []; sceneNow = []; prevAna = null; peopleNow = 0; return; }
+    if (!src) { detectedNow = []; detectedObjs = []; sceneNow = []; sceneTags = []; prevAna = null; peopleNow = 0; return; }
     if (document.hidden) return;
     if (bgMode === 'camera' && !camHello && !screenOn) { camHello = true; setTimeout(() => sceneReact('camon', ri(2, 3)), 1500); }
     try { handleAtmosphere(analyzeFrame(src[0])); } catch (e) {}
@@ -3341,6 +3944,7 @@ const ANSHLAG_FACES = {
         if (e) found.set(e[0], e);
       });
       detectedNow = [...found.keys()];
+      detectedObjs = [...found.values()];
       handlePeople(persons);
       if (S.ai === 'key' && canSee()) return;
       const nowT = Date.now(), next = new Map();
@@ -3410,7 +4014,9 @@ const ANSHLAG_FACES = {
     const parts = Object.entries(stats.don).map(([lg, sum]) => T[lg].money(sum));
     $('#stDon').textContent = parts.length ? parts.join(' + ') : T[S.lang].money(0);
     $('#stLikes').textContent = T[S.lang].compact(Math.round(likes));
-    $('#stFollows').textContent = '+' + Math.round(peak * rnd(.004, .02)).toLocaleString('ru-RU');
+    $('#stFollows').textContent = '+' + followGain.toLocaleString('ru-RU');
+    if (S.followKeep) { S.followers = followersNow(); followGain = 0; save(); syncFollowers(); }
+    cancelPlanned();
     const topBox = $('#stTop'), top = [...donors.entries()].sort((a, b) => b[1] - a[1]).slice(0, 3);
     topBox.textContent = '';
     topBox.hidden = !top.length;
@@ -3431,6 +4037,7 @@ const ANSHLAG_FACES = {
     stats.comments = 0; stats.hearts = 0; stats.don = {};
     likes = Math.round(S.target * rnd(2, 6)); gifters.clear(); donors.clear(); renderTopFans();
     boost = 1; passed.clear(); unpin(); closeLineMenu();
+    followGain = 0; followFrac = 0; lastFollowEv = 0;
     camHello = false; isAbsent = false; absentTicks = 0; personTicks = 0; tagSeen.clear(); objSeen.clear();
     chatEl.textContent = '';
     history.length = 0;
