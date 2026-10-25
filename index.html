@@ -544,7 +544,6 @@ input[type=range]{width:100%;margin:4px 0;accent-color:var(--onair)}
           <div class="goal-title" id="goalTitle">Новый микрофон</div>
           <div class="goal-sum" id="goalSumLine"><span id="goalRaised">0 ₽</span> · <span id="goalCount">0 донатов</span></div>
         </div>
-        <button class="goal-btn" id="goalBtn" type="button">Донат</button>
       </div>
 
       <form class="bar" id="askForm" autocomplete="off">
@@ -1727,7 +1726,6 @@ const ANSHLAG_FACES = {
     stage.classList.toggle('has-goal', !!S.goal);
     $('#goalTitle').textContent = S.goalTitle || DEF.goalTitle;
     $('#goalK').textContent = goalDone ? t.goalDone : t.goalKs[S.platform];
-    $('#goalBtn').textContent = t.goalBtns[S.platform];
     $('#goalCount').textContent = t.dons(donCount);
     goalFill.style.width = Math.min(100, raised / target * 100).toFixed(1) + '%';
     goalEl.classList.toggle('done', goalDone);
@@ -2802,7 +2800,6 @@ const ANSHLAG_FACES = {
   $('#lookBtn').addEventListener('click', lookNow);
 
   /* goal settings */
-  $('#goalBtn').addEventListener('click', () => { ensureAudio(); donate(); });
   const setGoal = $('#setGoal'), setGoalTitle = $('#setGoalTitle'), setGoalSum = $('#setGoalSum');
   setGoal.checked = !!S.goal;
   setGoalTitle.value = S.goalTitle;
